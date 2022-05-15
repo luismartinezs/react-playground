@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply bg-primary-100 text-primary-800 h-screen overflow-hidden text-base m-8;
+}
+
+.button {
+  @apply px-2 py-1 bg-primary-500 text-white rounded hover:bg-primary-600;
+}
+
+.counter {
+  @apply text-4xl font-bold bg-primary-50 px-4 py-2 rounded shadow shadow-primary-200;
+}
