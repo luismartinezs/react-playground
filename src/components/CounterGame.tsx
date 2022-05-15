@@ -2,7 +2,6 @@ import React, { useReducer, useContext } from "react";
 import IncreaseButton from "@/components/IncreaseButton";
 import DecreaseButton from "@/components/DecreaseButton";
 import CounterDisplay from "@/components/CounterDisplay";
-import { countReducer, initialState } from "@/store/counter";
 import { ThemeContext } from "@/context/theme";
 
 const COUNTER_NUM = 3;

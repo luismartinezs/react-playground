@@ -15,7 +15,7 @@ pnpm test
 - [x] `useReducer` store with counter game
 - [x] `useContext` to inject some value, what it is is not important
 - [x] `useContext` to provide actions and state to counter game
-- [ ] Put counter reducer and context in the same file
+- [x] Put counter reducer and context in the same file
 - [ ] Create custom hook, what it does is not important
 
 ## Resources
@@ -23,6 +23,7 @@ pnpm test
 ### React
 
 - useReducer https://reactjs.org/docs/hooks-reference.html#usereducer
+- Custom hooks https://reactjs.org/docs/hooks-custom.html#gatsby-focus-wrapper
 
 ### Testing
 

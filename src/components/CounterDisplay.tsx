@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { CounterContext } from "@/context/counter";
+import React from "react";
+import { useCount } from "@/providers/count";
 
 const CounterDisplay = () => {
-  const count = useContext(CounterContext);
+  const count = useCount();
 
   return <div className="counter">{count}</div>;
 };

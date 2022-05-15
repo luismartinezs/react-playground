@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { CounterDispatchContext } from "@/context/counter";
+import { useCountDispatch } from "@/providers/count";
 
 const DecreaseButton = () => {
-  const dispatch = useContext(CounterDispatchContext);
+  const dispatch = useCountDispatch();
 
   return (
     <button className="button" onClick={() => dispatch({ type: "decrement" })}>
