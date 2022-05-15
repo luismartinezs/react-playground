@@ -1,12 +1,13 @@
-import React, {useState} from 'react'
+import React, { useReducer } from "react";
 import IncreaseButton from "@/components/IncreaseButton";
 import DecreaseButton from "@/components/DecreaseButton";
 import CounterDisplay from "@/components/CounterDisplay";
+import { countReducer, initialState } from "@/store/counter";
 
 const COUNTER_NUM = 3;
 
 const CounterGame = () => {
-  const [count, setCount] = useState(0)
+  const [count, dispatch] = useReducer(countReducer, initialState);
 
   const counters = Array(COUNTER_NUM)
     .fill(null)
@@ -16,8 +17,8 @@ const CounterGame = () => {
     <div className="flex flex-col space-y-2">
       <h2 className="text-3xl">Counter game</h2>
       <div className="flex space-x-2">
-        <IncreaseButton onClick={() => setCount(count + 1)} />
-        <DecreaseButton onClick={() => setCount(count - 1)} />
+        <IncreaseButton onClick={() => dispatch({ type: "increment" })} />
+        <DecreaseButton onClick={() => dispatch({ type: "decrement" })} />
       </div>
       <div className="flex space-x-2">{counters}</div>
     </div>
