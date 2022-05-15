@@ -1,9 +1,16 @@
-import React from 'react'
-import CounterGame from '@/components/CounterGame'
+import React from "react";
+import CounterGame from "@/components/CounterGame";
+import ThemeSelector from "@/components/ThemeSelector";
+import { ThemeContext } from "@/context/theme";
 
 function App(): JSX.Element {
   return (
-    <CounterGame />
+    <>
+      <ThemeSelector />
+      <ThemeContext.Provider value={"green"}>
+        <CounterGame />
+      </ThemeContext.Provider>
+    </>
   );
 }
 
