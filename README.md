@@ -16,7 +16,7 @@ pnpm test
 - [x] `useContext` to inject some value, what it is is not important
 - [x] `useContext` to provide actions and state to counter game
 - [x] Put counter reducer and context in the same file
-- [ ] Create custom hook, what it does is not important
+- [x] Create custom hook, what it does is not important
 
 ## Resources
 
