@@ -8,19 +8,18 @@ import { ThemeContext } from "@/context/theme";
 const COUNTER_NUM = 3;
 
 const CounterGame = () => {
-  const [count, dispatch] = useReducer(countReducer, initialState);
   const theme = useContext(ThemeContext);
 
   const counters = Array(COUNTER_NUM)
     .fill(null)
-    .map((_, i) => <CounterDisplay key={i} count={count} />);
+    .map((_, i) => <CounterDisplay key={i} />);
 
   return (
     <div className="flex flex-col space-y-2">
       <h2 className="text-3xl">Counter game ({theme})</h2>
       <div className="flex space-x-2">
-        <IncreaseButton onClick={() => dispatch({ type: "increment" })} />
-        <DecreaseButton onClick={() => dispatch({ type: "decrement" })} />
+        <IncreaseButton />
+        <DecreaseButton />
       </div>
       <div className="flex space-x-2">{counters}</div>
     </div>
