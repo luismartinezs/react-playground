@@ -13,6 +13,7 @@ pnpm test
 ## Tasks
 
 - [x] `useReducer` store with counter game
+- [ ] `useContext` to inject some value, what it is is not important
 - [ ] `useContext` to provide actions and state to counter game
 - [ ] Create custom hook, what it does is not important
 
