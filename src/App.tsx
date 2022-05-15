@@ -6,6 +6,7 @@ import { countReducer, initialState } from "@/store/counter";
 import CountProvider from "@/providers/count";
 import TheThing from '@/components/TheThing'
 import ScrollToMe from '@/components/ScrollToMe'
+import SwApi from '@/components/SwApi'
 
 function App(): JSX.Element {
   const [count, dispatch] = useReducer(countReducer, initialState);
@@ -19,6 +20,7 @@ function App(): JSX.Element {
         </CountProvider>
       </ThemeContext.Provider>
       <TheThing />
+      <SwApi />
       <div className="h-80"></div>
       <ScrollToMe />
     </>
