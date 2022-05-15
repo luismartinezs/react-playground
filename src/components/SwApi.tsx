@@ -20,11 +20,7 @@ const SwApi = () => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  return (
-    <div>
-      <pre>{JSON.stringify(data, null, 4)}</pre>
-    </div>
-  );
+  return <div>{data.name}</div>;
 };
 
 export default SwApi;
