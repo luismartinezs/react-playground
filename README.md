@@ -1,12 +1,6 @@
-# React + vite + vitest + typecript + tailwindCSS starter
+# React playground
 
-Starting template for React projects.
-
-- Build tool: Vite
-- Testing: Vitest + React testing library + jsdom. the `test` folder contains a basic example
-- Typing: Typescript (obviously). `HelloWorld` component has basic typing as an example
-- CSS: TailwindCSS (configure the `tailwind.config.js` file)
-- Icons: Uses `unplugin-icons` library, example in `HelloWorld` component
+I use this project to play around and learn React
 
 ## Usage
 
@@ -17,6 +11,10 @@ pnpm test
 ```
 
 ## Resources
+
+### React
+
+- useReducer https://reactjs.org/docs/hooks-reference.html#usereducer
 
 ### Testing
 
