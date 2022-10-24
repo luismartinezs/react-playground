@@ -9,6 +9,7 @@ import ScrollToMe from "@/components/ScrollToMe";
 import SwApi from "@/components/SwApi";
 import MapTest from "@/components/MapTest";
 import TransformEffect from "@/components/TransformEffect";
+import LiveAnnouncer from "@/components/Announcer";
 
 
 function App(): JSX.Element {
@@ -17,6 +18,7 @@ function App(): JSX.Element {
   return (
     <>
       <ThemeSelector />
+      <LiveAnnouncer />
       <ThemeContext.Provider value={"green"}>
         <CountProvider>
           <CounterGame />
