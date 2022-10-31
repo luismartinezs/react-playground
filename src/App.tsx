@@ -11,6 +11,7 @@ import MapTest from "@/components/MapTest";
 import TransformEffect from "@/components/TransformEffect";
 import LiveAnnouncer from "@/components/Announcer";
 import Input from "@/components/Input";
+import Disclosure from "@/components/Disclosure";
 
 function App(): JSX.Element {
   const [count, dispatch] = useReducer(countReducer, initialState);
@@ -19,6 +20,7 @@ function App(): JSX.Element {
     <>
       <ThemeSelector />
       <Input />
+      <Disclosure />
       <LiveAnnouncer />
       <ThemeContext.Provider value={"green"}>
         <CountProvider>
