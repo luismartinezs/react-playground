@@ -12,6 +12,7 @@ import TransformEffect from "@/components/TransformEffect";
 import LiveAnnouncer from "@/components/Announcer";
 import Input from "@/components/Input";
 import Disclosure from "@/components/Disclosure";
+import PostDate from "@/components/PostDate";
 
 function App(): JSX.Element {
   const [count, dispatch] = useReducer(countReducer, initialState);
@@ -19,6 +20,7 @@ function App(): JSX.Element {
   return (
     <>
       <ThemeSelector />
+      <PostDate date={new Date(1e6)} />
       <Input />
       <Disclosure />
       <LiveAnnouncer />

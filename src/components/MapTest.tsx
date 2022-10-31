@@ -15,7 +15,7 @@ const MapTest = () => {
     </Fragment>
   ));
 
-  return map;
+  return <>{map}</>;
 };
 
 export default MapTest;
