@@ -13,6 +13,8 @@ import LiveAnnouncer from "@/components/Announcer";
 import Input from "@/components/Input";
 import Disclosure from "@/components/Disclosure";
 import PostDate from "@/components/PostDate";
+import IntlWithValues from "@/components/IntlWithValues";
+import AccessibleName from "@/components/AccessibleName";
 
 function App(): JSX.Element {
   const [count, dispatch] = useReducer(countReducer, initialState);
@@ -20,6 +22,8 @@ function App(): JSX.Element {
   return (
     <>
       <ThemeSelector />
+      <AccessibleName />
+      <IntlWithValues />
       <PostDate date={new Date(1e6)} />
       <Input />
       <Disclosure />
