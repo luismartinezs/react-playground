@@ -15,6 +15,7 @@ import Disclosure from "@/components/Disclosure";
 import PostDate from "@/components/PostDate";
 import IntlWithValues from "@/components/IntlWithValues";
 import AccessibleName from "@/components/AccessibleName";
+import NestedIntl from "@/components/nestedIntl";
 
 function App(): JSX.Element {
   const [count, dispatch] = useReducer(countReducer, initialState);
@@ -22,6 +23,7 @@ function App(): JSX.Element {
   return (
     <>
       <ThemeSelector />
+      <NestedIntl />
       <AccessibleName />
       <IntlWithValues />
       <PostDate date={new Date(1e6)} />
