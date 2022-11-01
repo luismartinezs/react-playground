@@ -1,4 +1,4 @@
-const VALUES: { [index: string]: string } = {
+const VALUES: Record<string, string> = {
   name: "name",
   age: "age",
   address: "address",

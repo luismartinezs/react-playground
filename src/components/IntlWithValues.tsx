@@ -23,10 +23,24 @@ const TYPES = defineMessages({
   },
 });
 
+const values: Record<string, string> = {
+  name: "Luis",
+};
+
 const IntlWithValues = () => {
   const intl = useIntl();
   const getRandomText = () => texts[Math.floor(Math.random() * texts.length)];
   const getRandomType = () => types[Math.floor(Math.random() * types.length)];
+
+  const action = intl.formatMessage({
+    defaultMessage: "date",
+    id: "7d26a24b-aedf-4f9a-9f6c-ad3b3329ae16",
+  });
+
+  const type = intl.formatMessage({
+    defaultMessage: "update",
+    id: "f1b40609-10ec-43af-8e1b-4f9bba2c5903",
+  });
 
   return (
     <>
@@ -56,9 +70,9 @@ const IntlWithValues = () => {
           id="2ea4e5af-87dc-4cb6-acf3-ea092fc0dd79"
           defaultMessage="a {action} {type} {value} z"
           values={{
-            action: "update",
-            type: "name",
-            value: "Luis",
+            action: action,
+            type: type,
+            value: type in values ? values[type] : "",
           }}
         ></FormattedMessage>
       </div>
