@@ -1,0 +1,15 @@
+.heading {
+  @apply text-sky-500 text-xl font-bold my-2;
+}
+
+.paragraph {
+  @apply text-sky-700 my-2;
+}
+
+.list {
+  @apply text-sky-700 my-2;
+}
+
+.accessibleStyles {
+  @apply text-red-500 text-lg font-semibold;
+}

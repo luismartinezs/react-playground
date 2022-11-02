@@ -16,12 +16,13 @@ import PostDate from "@/components/PostDate";
 import IntlWithValues from "@/components/IntlWithValues";
 import AccessibleName from "@/components/AccessibleName";
 import NestedIntl from "@/components/nestedIntl";
+import StylesTest from "@/components/StylesTest";
 
 function App(): JSX.Element {
-  const [count, dispatch] = useReducer(countReducer, initialState);
-
   return (
     <>
+      <StylesTest />
+      <StylesTest useAccessibleStyles />
       <ThemeSelector />
       <NestedIntl />
       <AccessibleName />

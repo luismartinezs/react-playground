@@ -1,11 +1,15 @@
-const VALUES: Record<string, string> = {
+const VALUES = {
   name: "name",
   age: "age",
   address: "address",
 };
 
+function isValidKey(key: string): key is keyof typeof VALUES {
+  return key in VALUES;
+}
+
 export function getVal(key: string) {
-  if (key in VALUES) {
+  if (isValidKey(key)) {
     return VALUES[key];
   }
 
