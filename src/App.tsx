@@ -17,10 +17,18 @@ import IntlWithValues from "@/components/IntlWithValues";
 import AccessibleName from "@/components/AccessibleName";
 import NestedIntl from "@/components/nestedIntl";
 import StylesTest from "@/components/StylesTest";
+import FakeBtn from "@/components/FakeBtn";
+import Video from "@/components/Video";
+import AriaProps from "@/components/AriaProps";
+import LinkName from "@/components/LinkName";
 
 function App(): JSX.Element {
   return (
     <>
+      <LinkName />
+      <AriaProps />
+      <Video />
+      <FakeBtn />
       <StylesTest />
       <StylesTest useAccessibleStyles />
       <ThemeSelector />
