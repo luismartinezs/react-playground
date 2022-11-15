@@ -21,10 +21,14 @@ import FakeBtn from "@/components/FakeBtn";
 import Video from "@/components/Video";
 import AriaProps from "@/components/AriaProps";
 import LinkName from "@/components/LinkName";
+import Form from "@/components/Form";
+import FieldArray from "@/components/FieldArray";
 
 function App(): JSX.Element {
   return (
     <>
+      <FieldArray />
+      <Form />
       <LinkName />
       <AriaProps />
       <Video />

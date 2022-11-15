@@ -14,6 +14,7 @@ const StylesTest: FC<Props> = ({ useAccessibleStyles }) => {
   );
   const paragraph1 = classnames(
     Styles.paragraph,
+    useAccessibleStyles && "bg-stone-700",
     useAccessibleStyles && Styles.accessibleStyles
   );
   const list = classnames(
