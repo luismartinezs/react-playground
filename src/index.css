@@ -19,3 +19,7 @@ body {
 .error {
   @apply text-red-500 border-red-500 border;
 }
+
+h2 {
+  @apply text-lg font-bold;
+}

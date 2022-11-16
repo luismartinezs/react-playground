@@ -23,10 +23,12 @@ import AriaProps from "@/components/AriaProps";
 import LinkName from "@/components/LinkName";
 import Form from "@/components/Form";
 import FieldArray from "@/components/FieldArray";
+import AriaDescribedby from "@/components/AriaDescribedby";
 
 function App(): JSX.Element {
   return (
     <>
+      <AriaDescribedby />
       <FieldArray />
       <Form />
       <LinkName />
