@@ -26,10 +26,12 @@ import FieldArray from "@/components/FieldArray";
 import AriaDescribedby from "@/components/AriaDescribedby";
 import StackingOrder from "@/components/StackingOrder";
 import RadioButtons from "@/components/RadioButtons";
+import CustomRadioGroup from "@/components/CustomRadioGroup";
 
 function App(): JSX.Element {
   return (
     <>
+      <CustomRadioGroup />
       <RadioButtons />
       <StackingOrder />
       <AriaDescribedby />

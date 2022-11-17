@@ -1,0 +1,8 @@
+.customRadioGroup {
+  [role="radio"] {
+    @apply rounded-full border-2 border-sky-500 h-[20px] w-[20px]  text-white inline-block mr-1;
+    &[aria-checked="true"] {
+      @apply bg-sky-500;
+    }
+  }
+}
