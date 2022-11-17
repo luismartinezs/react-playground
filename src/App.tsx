@@ -24,10 +24,12 @@ import LinkName from "@/components/LinkName";
 import Form from "@/components/Form";
 import FieldArray from "@/components/FieldArray";
 import AriaDescribedby from "@/components/AriaDescribedby";
+import StackingOrder from "@/components/StackingOrder";
 
 function App(): JSX.Element {
   return (
     <>
+      <StackingOrder />
       <AriaDescribedby />
       <FieldArray />
       <Form />
