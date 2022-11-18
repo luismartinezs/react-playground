@@ -27,10 +27,12 @@ import AriaDescribedby from "@/components/AriaDescribedby";
 import StackingOrder from "@/components/StackingOrder";
 import RadioButtons from "@/components/RadioButtons";
 import CustomRadioGroup from "@/components/CustomRadioGroup";
+import FieldsetExperiments from "@/components/FieldsetExperiments";
 
 function App(): JSX.Element {
   return (
     <>
+      <FieldsetExperiments />
       <CustomRadioGroup />
       <RadioButtons />
       <StackingOrder />
