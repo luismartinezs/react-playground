@@ -29,10 +29,14 @@ import RadioButtons from "@/components/RadioButtons";
 import CustomRadioGroup from "@/components/CustomRadioGroup";
 import FieldsetExperiments from "@/components/FieldsetExperiments";
 import FieldsetUsage from "@/components/FieldsetUsage";
+import RadixRadioGroup from "@/components/RadixRadioGroup";
+import FieldsetBasic from "@/components/FieldsetBasic";
 
 function App(): JSX.Element {
   return (
     <>
+      <FieldsetBasic />
+      <RadixRadioGroup />
       <FieldsetUsage />
       <FieldsetExperiments />
       <CustomRadioGroup />
