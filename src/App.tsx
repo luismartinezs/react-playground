@@ -28,10 +28,12 @@ import StackingOrder from "@/components/StackingOrder";
 import RadioButtons from "@/components/RadioButtons";
 import CustomRadioGroup from "@/components/CustomRadioGroup";
 import FieldsetExperiments from "@/components/FieldsetExperiments";
+import FieldsetUsage from "@/components/FieldsetUsage";
 
 function App(): JSX.Element {
   return (
     <>
+      <FieldsetUsage />
       <FieldsetExperiments />
       <CustomRadioGroup />
       <RadioButtons />
