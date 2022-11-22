@@ -31,10 +31,12 @@ import FieldsetExperiments from "@/components/FieldsetExperiments";
 import FieldsetUsage from "@/components/FieldsetUsage";
 import RadixRadioGroup from "@/components/RadixRadioGroup";
 import FieldsetBasic from "@/components/FieldsetBasic";
+import FocusManager from "@/components/FocusManager";
 
 function App(): JSX.Element {
   return (
     <>
+      <FocusManager />
       <FieldsetBasic />
       <RadixRadioGroup />
       <FieldsetUsage />
