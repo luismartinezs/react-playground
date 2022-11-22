@@ -51,6 +51,8 @@ const IntlWithValues = () => {
           defaultMessage="Current date is {date, date, ::yyyyMMdd}"
           values={{
             date: new Date("2022/10/10"),
+            text: "lorem",
+            type: "ipsum",
           }}
         />
       </div>

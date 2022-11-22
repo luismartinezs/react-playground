@@ -3,7 +3,7 @@ import { useFocusManager, FocusScope } from "react-aria";
 function Toolbar(props) {
   return (
     <div role="toolbar">
-      <FocusScope restoreFocus>{props.children}</FocusScope>
+      <FocusScope>{props.children}</FocusScope>
     </div>
   );
 }
@@ -30,11 +30,14 @@ function ToolbarButton(props) {
 
 function Root() {
   return (
-    <Toolbar>
-      <ToolbarButton>Cut</ToolbarButton>
-      <ToolbarButton>Copy</ToolbarButton>
-      <ToolbarButton>Paste</ToolbarButton>
-    </Toolbar>
+    <>
+      <h2>Aria focus library example</h2>
+      <Toolbar>
+        <ToolbarButton>Cut</ToolbarButton>
+        <ToolbarButton>Copy</ToolbarButton>
+        <ToolbarButton>Paste</ToolbarButton>
+      </Toolbar>
+    </>
   );
 }
 export default Root;
