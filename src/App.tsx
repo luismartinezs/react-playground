@@ -32,10 +32,14 @@ import FieldsetUsage from "@/components/FieldsetUsage";
 import RadixRadioGroup from "@/components/RadixRadioGroup";
 import FieldsetBasic from "@/components/FieldsetBasic";
 import FocusManager from "@/components/FocusManager";
+import Dialog from "@/components/Dialog";
+import DateInput from "@/components/DateInput";
 
 function App(): JSX.Element {
   return (
     <>
+      <DateInput />
+      <Dialog />
       <FocusManager />
       <FieldsetBasic />
       <RadixRadioGroup />
