@@ -9,7 +9,7 @@ import ScrollToMe from "@/components/ScrollToMe";
 import SwApi from "@/components/SwApi";
 import MapTest from "@/components/MapTest";
 import TransformEffect from "@/components/TransformEffect";
-import LiveAnnouncer from "@/components/Announcer";
+// import LiveAnnouncer from "@/components/Announcer";
 import Input from "@/components/Input";
 import Disclosure from "@/components/Disclosure";
 import PostDate from "@/components/PostDate";
@@ -34,10 +34,14 @@ import FieldsetBasic from "@/components/FieldsetBasic";
 import FocusManager from "@/components/FocusManager";
 import Dialog from "@/components/Dialog";
 import DateInput from "@/components/DateInput";
+import { SROnlyToast } from "@/components/ScreenReader";
 
 function App(): JSX.Element {
   return (
     <>
+      <SROnlyToast timeout={5000}>
+        <div aria-live="assertive">Hello world React Playground</div>
+      </SROnlyToast>
       <DateInput />
       <Dialog />
       <FocusManager />
@@ -64,7 +68,7 @@ function App(): JSX.Element {
       <PostDate date={new Date(1e6)} />
       <Input />
       <Disclosure />
-      <LiveAnnouncer />
+      {/* <LiveAnnouncer /> */}
       <ThemeContext.Provider value={"green"}>
         <CountProvider>
           <CounterGame />
