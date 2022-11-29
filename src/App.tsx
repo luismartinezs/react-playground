@@ -35,10 +35,12 @@ import FocusManager from "@/components/FocusManager";
 import Dialog from "@/components/Dialog";
 import DateInput from "@/components/DateInput";
 import { SROnlyToast } from "@/components/ScreenReader";
+import ReactMask from "@/components/ReactMask";
 
 function App(): JSX.Element {
   return (
     <>
+      <ReactMask />
       <SROnlyToast timeout={5000}>
         <div aria-live="assertive">Hello world React Playground</div>
       </SROnlyToast>
