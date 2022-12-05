@@ -23,3 +23,10 @@ body {
 h2 {
   @apply text-lg font-bold;
 }
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  font-weight: 400;
+}

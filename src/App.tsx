@@ -36,10 +36,16 @@ import Dialog from "@/components/Dialog";
 import DateInput from "@/components/DateInput";
 import { SROnlyToast } from "@/components/ScreenReader";
 import ReactMask from "@/components/ReactMask";
+import Parent from "@/components/Context";
+import NestedContext from "@/components/NestedContext";
+import BlurredInput from "@/components/BlurredInput";
 
 function App(): JSX.Element {
   return (
     <>
+      <BlurredInput />
+      <NestedContext />
+      <Parent />
       <ReactMask />
       <SROnlyToast timeout={5000}>
         <div aria-live="assertive">Hello world React Playground</div>

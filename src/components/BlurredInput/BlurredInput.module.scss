@@ -1,0 +1,10 @@
+.blurredInput:not(:focus) {
+  color: transparent;
+  // text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  position: relative;
+  &::before {
+    content: "**/**/***";
+    position: absolute;
+    color: black;
+  }
+}
