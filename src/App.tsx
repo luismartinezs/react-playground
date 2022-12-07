@@ -39,10 +39,12 @@ import ReactMask from "@/components/ReactMask";
 import Parent from "@/components/Context";
 import NestedContext from "@/components/NestedContext";
 import BlurredInput from "@/components/BlurredInput";
+import DelayedTooltip from "@/components/DelayedTooltip";
 
 function App(): JSX.Element {
   return (
     <>
+      <DelayedTooltip />
       <BlurredInput />
       <NestedContext />
       <Parent />
