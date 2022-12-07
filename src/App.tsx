@@ -40,10 +40,12 @@ import Parent from "@/components/Context";
 import NestedContext from "@/components/NestedContext";
 import BlurredInput from "@/components/BlurredInput";
 import DelayedTooltip from "@/components/DelayedTooltip";
+import AlertManager from "@/components/AlertManager";
 
 function App(): JSX.Element {
   return (
     <>
+      <AlertManager />
       <DelayedTooltip />
       <BlurredInput />
       <NestedContext />
