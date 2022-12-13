@@ -31,7 +31,12 @@ const Step = ({ stepNumber, step }) => {
   return (
     <div className={Style.step}>
       <span aria-hidden="true" className="flex items-center">
-        <Tooltip target={<StepNumber stepNumber={stepNumber} />}>
+        <Tooltip
+          btnProps={{
+            tabIndex: -1,
+          }}
+          target={<StepNumber stepNumber={stepNumber} />}
+        >
           {step}
         </Tooltip>
       </span>
