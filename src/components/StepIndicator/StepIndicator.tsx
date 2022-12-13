@@ -3,6 +3,12 @@ import React from "react";
 
 import Style from "./StepIndicator.module.scss";
 
+const StepNumber = ({ stepNumber }) => (
+  <div aria-hidden="true" className={Style.stepNumber}>
+    <span>{stepNumber}</span>
+  </div>
+);
+
 const Tooltip = ({ target, children }) => {
   return (
     <div className={Style.container}>
@@ -25,13 +31,7 @@ const Step = ({ stepNumber, step }) => {
   return (
     <div className={Style.step}>
       <span aria-hidden="true" className="flex items-center">
-        <Tooltip
-          target={
-            <div aria-hidden="true" className={Style.stepNumber}>
-              <span>{stepNumber}</span>
-            </div>
-          }
-        >
+        <Tooltip target={<StepNumber stepNumber={stepNumber} />}>
           {step}
         </Tooltip>
       </span>
