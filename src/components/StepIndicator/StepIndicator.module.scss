@@ -9,15 +9,7 @@ $tooltip-distance: $tooltip-arrow-width - 5;
 $tooltip-arrow-color: $tooltip-bg;
 $tooltip-offset: 15px;
 
-.divider {
-  max-width: 24px;
-  min-width: 8px;
-  height: 1px;
-  flex-grow: 1;
-  margin: 0 8px;
-  display: block;
-  background: black;
-}
+$step-size: 24px;
 
 .overlay {
   position: absolute;
@@ -221,6 +213,7 @@ $tooltip-offset: 15px;
   border: 0;
   line-height: 1;
   cursor: default;
+  width: $step-size;
 
   &:hover + [role="tooltip"],
   &:focus + [role="tooltip"] {
@@ -265,7 +258,7 @@ $tooltip-offset: 15px;
   height: 1px;
   flex-grow: 1;
   min-width: 8px;
-  max-width: 24px;
+  max-width: $step-size;
   background-color: black;
   margin: 0 8px;
   &:last-of-type {
@@ -273,8 +266,8 @@ $tooltip-offset: 15px;
   }
 }
 .stepNumber {
-  height: 24px;
-  width: 24px;
+  height: $step-size;
+  width: $step-size;
   border-radius: 100%;
   border: 1px solid black;
   display: flex;

@@ -19,7 +19,7 @@ const Tooltip = ({ target, children }) => {
   );
 };
 
-const Divider = () => <div className={Style.divider}></div>;
+const Divider = () => <div className={Style.border}></div>;
 
 const Step = ({ stepNumber, step }) => {
   return (
