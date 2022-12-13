@@ -24,7 +24,7 @@ const Divider = () => <div className={Style.border}></div>;
 const Step = ({ stepNumber, step }) => {
   return (
     <div className={Style.step}>
-      <span aria-hidden="true">
+      <span aria-hidden="true" className="flex items-center">
         <Tooltip
           target={
             <div aria-hidden="true" className={Style.stepNumber}>
