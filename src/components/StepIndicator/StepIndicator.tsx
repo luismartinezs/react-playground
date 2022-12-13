@@ -9,10 +9,10 @@ const StepNumber = ({ stepNumber }) => (
   </div>
 );
 
-const Tooltip = ({ target, children }) => {
+const Tooltip = ({ target, children, btnProps }) => {
   return (
     <div className={Style.container}>
-      <button tabIndex={-1} className={Style.target}>
+      <button className={Style.target} {...btnProps}>
         {target}
       </button>
       <div

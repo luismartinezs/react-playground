@@ -217,12 +217,19 @@ $step-size: 24px;
   border: 0;
   line-height: 1;
   position: absolute;
-  z-index: 10;
   width: $step-size + 38px;
-  height: $step-size + 1px;
+  height: $step-size + 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:focus {
+    outline: none;
+    > * {
+      outline: 5px auto Highlight;
+      outline: 5px auto -webkit-focus-ring-color;
+    }
+  }
 
   &:hover + [role="tooltip"],
   &:focus + [role="tooltip"] {
