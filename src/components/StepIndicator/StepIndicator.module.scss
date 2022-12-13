@@ -213,7 +213,6 @@ $step-size: 24px;
   border: 0;
   line-height: 1;
   cursor: default;
-  width: $step-size;
 
   &:hover + [role="tooltip"],
   &:focus + [role="tooltip"] {
