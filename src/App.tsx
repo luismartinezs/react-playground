@@ -41,10 +41,12 @@ import NestedContext from "@/components/NestedContext";
 import BlurredInput from "@/components/BlurredInput";
 import DelayedTooltip from "@/components/DelayedTooltip";
 import AlertManager from "@/components/AlertManager";
+import StepIndicator from "@/components/StepIndicator";
 
 function App(): JSX.Element {
   return (
     <>
+      <StepIndicator />
       <AlertManager />
       <DelayedTooltip />
       <BlurredInput />
