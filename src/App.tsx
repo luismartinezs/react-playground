@@ -42,10 +42,12 @@ import BlurredInput from "@/components/BlurredInput";
 import DelayedTooltip from "@/components/DelayedTooltip";
 import AlertManager from "@/components/AlertManager";
 import StepIndicator from "@/components/StepIndicator";
+import EslintPlay from "@/components/EslintPlay";
 
 function App(): JSX.Element {
   return (
     <>
+      <EslintPlay />
       <StepIndicator />
       <AlertManager />
       <DelayedTooltip />
