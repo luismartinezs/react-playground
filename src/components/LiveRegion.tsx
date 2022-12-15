@@ -6,10 +6,10 @@ function Message({ msg }: { msg: string }) {
   const [showMsg, setShowMsg] = useState(true)
   return (
     <>
+      {showMsg && <div>This is a {msg} live region</div>}
       <button className="button" onClick={() => setShowMsg(!showMsg)}>
         Toggle msg
       </button>
-      {showMsg && <div>This is a {msg} live region</div>}
     </>
   )
 }

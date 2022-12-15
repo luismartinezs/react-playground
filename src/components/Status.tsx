@@ -4,10 +4,10 @@ const StatusMsg = () => {
   const [showMsg, setShowMsg] = React.useState(true)
   return (
     <>
+      {showMsg && <div>This is a status</div>}
       <button className="button" onClick={() => setShowMsg(!showMsg)}>
         Toggle msg
       </button>
-      {showMsg && <div>This is a status</div>}
     </>
   )
 }
