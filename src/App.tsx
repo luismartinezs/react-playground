@@ -45,10 +45,12 @@ import StepIndicator from '@/components/StepIndicator'
 import Status from '@/components/Status'
 import Alert from '@/components/Alert'
 import LiveRegion from '@/components/LiveRegion'
+import MultilabelButton from '@/components/MultilabelButton'
 
 function App(): JSX.Element {
   return (
     <>
+      <MultilabelButton />
       <LiveRegion politeness="assertive" />
       <LiveRegion politeness="polite" />
       <Alert />
