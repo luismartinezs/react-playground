@@ -46,10 +46,12 @@ import Status from '@/components/Status'
 import Alert from '@/components/Alert'
 import LiveRegion from '@/components/LiveRegion'
 import MultilabelButton from '@/components/MultilabelButton'
+import Table from '@/components/Table'
 
 function App(): JSX.Element {
   return (
     <>
+      <Table />
       <MultilabelButton />
       <LiveRegion politeness="assertive" />
       <LiveRegion politeness="polite" />

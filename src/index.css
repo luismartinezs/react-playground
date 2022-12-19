@@ -30,3 +30,19 @@ h2 {
   box-sizing: border-box;
   font-weight: 400;
 }
+
+table {
+  @apply w-full border-collapse border border-primary-200;
+}
+
+th {
+  @apply bg-primary-200 text-primary-800 font-bold p-2;
+}
+
+td {
+  @apply border border-primary-200 p-2;
+}
+
+tr {
+  @apply hover:bg-primary-100;
+}
