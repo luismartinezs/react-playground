@@ -47,10 +47,17 @@ import Alert from '@/components/Alert'
 import LiveRegion from '@/components/LiveRegion'
 import MultilabelButton from '@/components/MultilabelButton'
 import Table from '@/components/Table'
+import FocusScope from '@/components/ReactAria/FocusScope'
+import ReactAriaDialog from '@/components/ReactAria/Dialog'
+import AccessibleButton from '@/components/AccessibleButton'
 
 function App(): JSX.Element {
   return (
     <>
+      <RadioButtons />
+      <AccessibleButton onClick={() => console.log('clicked a11y button')}>A11y button</AccessibleButton>
+      <ReactAriaDialog />
+      <FocusScope />
       <Table />
       <MultilabelButton />
       <LiveRegion politeness="assertive" />
@@ -75,7 +82,6 @@ function App(): JSX.Element {
       <FieldsetUsage />
       <FieldsetExperiments />
       <CustomRadioGroup />
-      <RadioButtons />
       <StackingOrder />
       <AriaDescribedby />
       <FieldArray />

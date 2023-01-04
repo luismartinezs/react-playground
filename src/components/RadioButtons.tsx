@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react'
 
 const RadioButtons = () => {
   return (
     <>
       <h2>Radio buttons</h2>
+      <p className="text-sm font-light">Native HTML radio groups with fieldset and legend</p>
       {/* default usage */}
       <fieldset>
         <legend>Choose your favorite color</legend>
@@ -36,7 +37,7 @@ const RadioButtons = () => {
         <label htmlFor="salad">Salad</label>
       </fieldset>
     </>
-  );
-};
+  )
+}
 
-export default RadioButtons;
+export default RadioButtons
