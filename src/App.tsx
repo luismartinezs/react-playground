@@ -50,10 +50,12 @@ import Table from '@/components/Table'
 import FocusScope from '@/components/ReactAria/FocusScope'
 import ReactAriaDialog from '@/components/ReactAria/Dialog'
 import AccessibleButton from '@/components/AccessibleButton'
+import LoadingAlert from '@/components/LoadingAlert'
 
 function App(): JSX.Element {
   return (
     <>
+      <LoadingAlert />
       <RadioButtons />
       <AccessibleButton onClick={() => console.log('clicked a11y button')}>A11y button</AccessibleButton>
       <ReactAriaDialog />
