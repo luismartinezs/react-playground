@@ -39,7 +39,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <IntlProvider locale={usersLocale} messages={translations[usersLocale]}>
     <RouterProvider router={router} />
-    {/* <App /> */}
   </IntlProvider>
   // </React.StrictMode>
 )

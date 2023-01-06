@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom'
 
 const routes = [
   {
@@ -12,7 +12,7 @@ const routes = [
   {
     path: 'none',
     label: 'None',
-  }
+  },
 ]
 
 export default function Root() {
@@ -22,16 +22,12 @@ export default function Root() {
         <ul className="flex space-x-2">
           {routes.map((route) => (
             <li key={route.path}>
-              <a href={route.path}>
-                {route.label}
-              </a>
+              <a href={route.path}>{route.label}</a>
             </li>
           ))}
         </ul>
       </nav>
-      <div>
-        <Outlet />
-      </div>
+      <Outlet />
     </>
-  );
+  )
 }
