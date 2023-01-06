@@ -18,6 +18,7 @@ const routes = [
 export default function Root() {
   return (
     <>
+      <div role="presentation"></div>
       <h1 className="text-lg font-bold">React playground</h1>
       <nav className="pb-2 mb-2 border-b border-sky-500">
         <ul className="flex space-x-2">
