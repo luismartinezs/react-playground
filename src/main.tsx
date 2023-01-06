@@ -27,6 +27,10 @@ const router = createBrowserRouter([
         path: 'alert',
         element: <LoadingAlert />,
       },
+      {
+        path: 'none',
+        element: <></>,
+      },
     ],
   },
 ])
