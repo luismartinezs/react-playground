@@ -33,7 +33,7 @@ function LoadingMessage() {
     }
   }, [])
 
-  return <>{loadingState === 'pending' && 'This in an invisible alert'}</>
+  return <>{loadingState === 'pending' && 'This is an invisible alert'}</>
 }
 
 export function LoadingAlert() {
@@ -48,7 +48,7 @@ export function LoadingAlert() {
       <h2>Loading alert</h2>
       <p>It will toggle on after 1s and toggle off 3s later -- sr only</p>
       <p>
-        Message is: <em>This in an invisible alert</em>
+        Message is: <em>This is an invisible alert</em>
       </p>
       <p>Valid query params:</p>
       <ul>
