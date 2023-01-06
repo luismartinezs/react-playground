@@ -8,8 +8,8 @@ export type TLoadingAlertContext = Readonly<{
   useSubscribeLoadingAlert: () => LoadingState
 }>
 
-const THROTTLE_TIME = 1_000
-const INITIAL_LOADING_TIME = 100
+const LOADING_TIME = 3_000
+const INIT_TIME = 1_000
 
 function LoadingMessage() {
   const [loadingState, setLoadingState] = useState('idle')
@@ -21,8 +21,8 @@ function LoadingMessage() {
       setLoadingState('pending')
       timer2 = setTimeout(() => {
         setLoadingState('idle')
-      }, THROTTLE_TIME)
-    }, THROTTLE_TIME)
+      }, LOADING_TIME)
+    }, INIT_TIME)
 
     return () => {
       clearTimeout(timer1)
@@ -35,13 +35,17 @@ function LoadingMessage() {
 
 export function LoadingAlert() {
   return (
-    <div
-      id="loading"
-      // role="alert"
-    >
-      <SROnly>
-        <LoadingMessage />
-      </SROnly>
-    </div>
+    <>
+      <h2>Loading alert</h2>
+      <p>It will toggle on after 1s and toggle off 3s later -- sr only</p>
+      <div
+        id="loading"
+        // role="alert"
+      >
+        <SROnly>
+          <LoadingMessage />
+        </SROnly>
+      </div>
+    </>
   )
 }
