@@ -50,8 +50,11 @@ import Table from '@/components/Table'
 import FocusScope from '@/components/ReactAria/FocusScope'
 import ReactAriaDialog from '@/components/ReactAria/Dialog'
 import AccessibleButton from '@/components/AccessibleButton'
+import useDocumentTitle from './hooks/useDocumentTitle'
 
 function App(): JSX.Element {
+  useDocumentTitle('App - React Playground')
+
   return (
     <>
       <RadioButtons />

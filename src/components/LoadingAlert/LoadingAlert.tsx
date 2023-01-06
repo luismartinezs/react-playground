@@ -1,3 +1,4 @@
+import useDocumentTitle from '@/hooks/useDocumentTitle'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -36,6 +37,7 @@ function LoadingMessage() {
 }
 
 export function LoadingAlert() {
+  useDocumentTitle('Loading alert - React Playground')
   let [searchParams] = useSearchParams()
 
   const loading = searchParams.get('loading') === 'true'
