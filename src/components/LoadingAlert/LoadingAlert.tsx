@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import SROnly from '../SROnly'
 
@@ -12,9 +12,25 @@ const THROTTLE_TIME = 1_000
 const INITIAL_LOADING_TIME = 100
 
 function LoadingMessage() {
-  const loadingState = useState('pending')
+  const [loadingState, setLoadingState] = useState('idle')
 
-  return <>{/* loadingState === "pending" && 'Content is loading' */}</>
+  useEffect(() => {
+    let timer1: number
+    let timer2: number
+    timer1 = setTimeout(() => {
+      setLoadingState('pending')
+      timer2 = setTimeout(() => {
+        setLoadingState('idle')
+      }, THROTTLE_TIME)
+    }, THROTTLE_TIME)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+    }
+  })
+
+  return <>{loadingState === 'pending' && 'Content is loading'}</>
 }
 
 export function LoadingAlert() {

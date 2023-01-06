@@ -64,7 +64,7 @@ function App(): JSX.Element {
       <MultilabelButton />
       <LiveRegion politeness="assertive" />
       <LiveRegion politeness="polite" />
-      <Alert />
+      {/* <Alert /> */}
       <Status />
       <StepIndicator />
       <AlertManager />
