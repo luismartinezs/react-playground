@@ -51,12 +51,14 @@ import FocusScope from '@/components/ReactAria/FocusScope'
 import ReactAriaDialog from '@/components/ReactAria/Dialog'
 import AccessibleButton from '@/components/AccessibleButton'
 import useDocumentTitle from './hooks/useDocumentTitle'
+import TextEllipsis from './components/TextEllipsis'
 
 function App(): JSX.Element {
   useDocumentTitle('App - React Playground')
 
   return (
     <>
+      <TextEllipsis />
       <RadioButtons />
       <AccessibleButton onClick={() => console.log('clicked a11y button')}>A11y button</AccessibleButton>
       <ReactAriaDialog />
