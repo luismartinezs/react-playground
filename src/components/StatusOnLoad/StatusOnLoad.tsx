@@ -75,6 +75,7 @@ const StatusOnLoad = () => {
         Feanor is rendered after {initTime}ms, then set to empty, then rendered after {duration}ms. You can define the
         time and duration with the "time" and "duration" query parameters.
       </p>
+      <p>Elrond off, because it just works</p>
       <div>
         <MsgBox>
           <div role="status" aria-live="polite">
@@ -98,7 +99,7 @@ const StatusOnLoad = () => {
         </MsgBox>
         <MsgBox>
           <div role="status" aria-live="polite">
-            {elrond}
+            Elrond off
           </div>
         </MsgBox>
         <MsgBox>
