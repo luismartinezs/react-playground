@@ -1,8 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-const MsgBox = ({ children }: { children?: React.ReactNode }) => {
-  return <div className="p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]">{children}</div>
+const ENABLED = {
+  alice: false,
+  bob: false,
+  charles: false,
+  diane: false,
+  elrond: false,
+  feanor: true,
+}
+
+const MsgBox = ({ children, isStatus }: { children?: React.ReactNode; isStatus?: boolean }) => {
+  return (
+    <div
+      role={isStatus ? 'status' : 'none'}
+      aria-live={isStatus ? 'polite' : 'off'}
+      className="p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]"
+    >
+      {children}
+    </div>
+  )
 }
 
 const MSG = {
@@ -77,36 +94,12 @@ const StatusOnLoad = () => {
       </p>
       <p>Elrond off, because it just works</p>
       <div>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            Status Alice
-          </div>
-        </MsgBox>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            {bob}
-          </div>
-        </MsgBox>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            {charles}
-          </div>
-        </MsgBox>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            {diane}
-          </div>
-        </MsgBox>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            Elrond off
-          </div>
-        </MsgBox>
-        <MsgBox>
-          <div role="status" aria-live="polite">
-            {feanor}
-          </div>
-        </MsgBox>
+        <MsgBox isStatus={ENABLED.alice}>Status Alice</MsgBox>
+        <MsgBox isStatus={ENABLED.bob}>{bob}</MsgBox>
+        <MsgBox isStatus={ENABLED.charles}>{charles}</MsgBox>
+        <MsgBox isStatus={ENABLED.diane}>{diane}</MsgBox>
+        <MsgBox isStatus={ENABLED.elrond}>{elrond}</MsgBox>
+        <MsgBox isStatus={ENABLED.feanor}>{feanor}</MsgBox>
       </div>
     </div>
   )
