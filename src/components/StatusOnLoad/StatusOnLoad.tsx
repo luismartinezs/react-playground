@@ -4,13 +4,20 @@ const MsgBox = ({ children }: { children?: React.ReactNode }) => {
   return <div className="p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]">{children}</div>
 }
 
-const MSG = { bob: 'Status Bob', charles: 'Status Charles', diane: 'Status Diane', elrond: 'Status Elrond' }
+const MSG = {
+  bob: 'Status Bob',
+  charles: 'Status Charles',
+  diane: 'Status Diane',
+  elrond: 'Status Elrond',
+  feanor: 'Status Feanor',
+}
 
 const StatusOnLoad = () => {
   const [bob, setBob] = useState(MSG.bob)
   const [charles, setCharles] = useState(MSG.charles)
   const [diane, setDiane] = useState(MSG.diane)
   const [elrond, setElrond] = useState('')
+  const [feanor, setFeanor] = useState(MSG.feanor)
 
   useEffect(() => {
     setBob('')
@@ -23,7 +30,7 @@ const StatusOnLoad = () => {
       setCharles(MSG.charles)
     }, 500)
     return () => clearTimeout(timer)
-  })
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -31,14 +38,28 @@ const StatusOnLoad = () => {
       setDiane(MSG.diane)
     }, 5000)
     return () => clearTimeout(timer)
-  })
+  }, [])
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setElrond(MSG.elrond)
     }, 5000)
     return () => clearTimeout(timer)
-  })
+  }, [])
+
+  useEffect(() => {
+    let timer2: number
+    const timer = setTimeout(() => {
+      setFeanor('')
+      timer2 = setTimeout(() => {
+        setFeanor(MSG.feanor)
+      }, 500)
+    }, 5000)
+    return () => {
+      clearTimeout(timer2)
+      clearTimeout(timer)
+    }
+  }, [])
 
   return (
     <div>
@@ -71,6 +92,11 @@ const StatusOnLoad = () => {
         <MsgBox>
           <div role="status" aria-live="polite">
             {elrond}
+          </div>
+        </MsgBox>
+        <MsgBox>
+          <div role="status" aria-live="polite">
+            {feanor}
           </div>
         </MsgBox>
       </div>
