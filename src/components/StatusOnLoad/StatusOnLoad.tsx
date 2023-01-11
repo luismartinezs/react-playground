@@ -33,7 +33,7 @@ function FlashingContent({
     return () => clearTimeout(timer1)
   }, [])
 
-  return <>{show ? children : ''}</>
+  return <span style={{ visibility: show ? 'visible' : 'hidden' }}>{children}</span>
 }
 
 const MsgBox = ({ children, isStatus }: { children?: React.ReactNode; isStatus?: boolean }) => {
