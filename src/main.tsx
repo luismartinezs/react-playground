@@ -11,6 +11,7 @@ import App from './App'
 import './index.css'
 import LoadingAlert from './components/LoadingAlert'
 import StatusOnLoad from './components/StatusOnLoad'
+import Timer from './components/Timer'
 
 const usersLocale = 'en'
 
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: 'status',
         element: <StatusOnLoad />,
+      },
+      {
+        path: 'timer',
+        element: <Timer />,
       },
       {
         path: 'none',

@@ -14,6 +14,10 @@ const routes = [
     label: 'Status',
   },
   {
+    path: 'timer',
+    label: 'Timer',
+  },
+  {
     path: 'none',
     label: 'None',
   },
