@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import classnames from 'classnames'
 
 const ENABLED = {
   alice: false,
@@ -15,7 +16,10 @@ const MsgBox = ({ children, isStatus }: { children?: React.ReactNode; isStatus?:
     <div
       role={isStatus ? 'status' : 'none'}
       aria-live={isStatus ? 'polite' : 'off'}
-      className="p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]"
+      className={classnames(
+        'p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]',
+        isStatus ? 'text-sky-900' : 'text-zinc-400'
+      )}
     >
       {children}
     </div>
