@@ -54,7 +54,7 @@ const StatusOnLoad = () => {
       timer2 = setTimeout(() => {
         setFeanor(MSG.feanor)
       }, 500)
-    }, 5000)
+    }, 500)
     return () => {
       clearTimeout(timer2)
       clearTimeout(timer)
