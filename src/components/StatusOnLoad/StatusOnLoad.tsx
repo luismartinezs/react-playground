@@ -11,6 +11,31 @@ const ENABLED = {
   feanor: true,
 }
 
+function FlashingContent({
+  children,
+  init = 250,
+  duration = 150,
+}: {
+  children: React.ReactNode
+  init?: number
+  duration?: number
+}) {
+  const [show, setShow] = useState(true)
+
+  useEffect(() => {
+    const timer1 = setTimeout(() => {
+      setShow(false)
+      const timer2 = setTimeout(() => {
+        setShow(true)
+      }, duration)
+      return () => clearTimeout(timer2)
+    }, init)
+    return () => clearTimeout(timer1)
+  }, [])
+
+  return <>{show ? children : ''}</>
+}
+
 const MsgBox = ({ children, isStatus }: { children?: React.ReactNode; isStatus?: boolean }) => {
   return (
     <div
@@ -43,7 +68,6 @@ const StatusOnLoad = () => {
   const [charles, setCharles] = useState(MSG.charles)
   const [diane, setDiane] = useState(MSG.diane)
   const [elrond, setElrond] = useState('')
-  const [feanor, setFeanor] = useState(MSG.feanor)
 
   useEffect(() => {
     setBob('')
@@ -73,20 +97,6 @@ const StatusOnLoad = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    let timer2: number
-    const timer = setTimeout(() => {
-      setFeanor('')
-      timer2 = setTimeout(() => {
-        setFeanor(MSG.feanor)
-      }, duration)
-    }, initTime)
-    return () => {
-      clearTimeout(timer2)
-      clearTimeout(timer)
-    }
-  }, [])
-
   return (
     <div>
       <h2>Status</h2>
@@ -103,7 +113,11 @@ const StatusOnLoad = () => {
         <MsgBox isStatus={ENABLED.charles}>{charles}</MsgBox>
         <MsgBox isStatus={ENABLED.diane}>{diane}</MsgBox>
         <MsgBox isStatus={ENABLED.elrond}>{elrond}</MsgBox>
-        <MsgBox isStatus={ENABLED.feanor}>{feanor}</MsgBox>
+        <MsgBox isStatus={ENABLED.feanor}>
+          <FlashingContent init={initTime} duration={duration}>
+            {MSG.feanor}
+          </FlashingContent>
+        </MsgBox>
       </div>
     </div>
   )
