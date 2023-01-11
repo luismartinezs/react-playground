@@ -10,6 +10,10 @@ const routes = [
     label: 'Alert',
   },
   {
+    path: 'status',
+    label: 'Status',
+  },
+  {
     path: 'none',
     label: 'None',
   },
