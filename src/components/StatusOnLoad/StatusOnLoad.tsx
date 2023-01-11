@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 const MsgBox = ({ children }: { children?: React.ReactNode }) => {
   return <div className="p-2 m-1 border rounded-md border-sky-500 w-fit min-w-[150px] min-h-[42px]">{children}</div>
@@ -13,6 +14,10 @@ const MSG = {
 }
 
 const StatusOnLoad = () => {
+  let [searchParams] = useSearchParams()
+  const initTime = Number(searchParams.get('time')) || 0
+  const duration = Number(searchParams.get('duration')) || 0
+
   const [bob, setBob] = useState(MSG.bob)
   const [charles, setCharles] = useState(MSG.charles)
   const [diane, setDiane] = useState(MSG.diane)
@@ -53,8 +58,8 @@ const StatusOnLoad = () => {
       setFeanor('')
       timer2 = setTimeout(() => {
         setFeanor(MSG.feanor)
-      }, 500)
-    }, 500)
+      }, duration)
+    }, initTime)
     return () => {
       clearTimeout(timer2)
       clearTimeout(timer)
@@ -67,6 +72,8 @@ const StatusOnLoad = () => {
       <p>
         Alice message is rendered as is. Bob message is rendered, then set to empty, then rendered, immediately on
         mount. Charles message is like Bob, but with 500ms delay. Diane, after 5000ms. Elrond pops up after 5000ms.
+        Feanor is rendered after {initTime}ms, then set to empty, then rendered after {duration}ms. You can define the
+        time and duration with the "time" and "duration" query parameters.
       </p>
       <div>
         <MsgBox>
