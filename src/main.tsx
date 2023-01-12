@@ -14,7 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
-import StatusNoFlash from './components/StatusNoFlash';
+import StatusNoFlash from './components/StatusNoFlash'
 
 const usersLocale = 'en'
 
