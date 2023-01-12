@@ -25,6 +25,8 @@ const routes = [
     path: 'none',
     label: 'None',
   },
+  // new component link here
+  { path: 'status-no-flash', label: 'StatusNoFlash' },
 ]
 
 export default function Root() {
