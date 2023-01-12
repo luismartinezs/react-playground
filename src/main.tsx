@@ -12,6 +12,7 @@ import './index.css'
 import LoadingAlert from './components/LoadingAlert'
 import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
+import ReactIntl from './components/ReactIntl'
 
 const usersLocale = 'en'
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: 'timer',
         element: <Timer />,
+      },
+      {
+        path: 'react-intl',
+        element: <ReactIntl />,
       },
       {
         path: 'none',

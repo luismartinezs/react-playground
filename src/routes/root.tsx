@@ -18,6 +18,10 @@ const routes = [
     label: 'Timer',
   },
   {
+    path: 'react-intl',
+    label: 'React-intl',
+  },
+  {
     path: 'none',
     label: 'None',
   },
