@@ -13,11 +13,20 @@ const getStripe = () => {
 getStripe()
 
 const CheckoutForm = () => {
+  const commonOptions = {
+    classes: {
+      focus: 'outline-none ring-2 ring-sky-500',
+    },
+  }
   return (
     <form>
-      <CardNumberElement id="card-number" className="px-4 py-2 my-2 bg-white border rounded-md" />
-      <CardExpiryElement className="px-4 py-2 my-2 bg-white border rounded-md" />
-      <CardCvcElement className="px-4 py-2 my-2 bg-white border rounded-md" />
+      <CardNumberElement
+        id="card-number"
+        className="px-4 py-2 my-2 bg-white border rounded-md"
+        options={commonOptions}
+      />
+      <CardExpiryElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
+      <CardCvcElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
       <button className="button">Submit</button>
     </form>
   )
