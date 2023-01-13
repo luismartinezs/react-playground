@@ -26,6 +26,7 @@ const routes = [
     label: 'None',
   },
   // new component link here
+  { path: 'react-stripe', label: 'ReactStripe' },
   { path: 'status-no-flash', label: 'StatusNoFlash' },
 ]
 

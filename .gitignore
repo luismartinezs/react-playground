@@ -26,3 +26,6 @@ dist-ssr
 
 # Vitest
 coverage
+
+# Env vars
+.env

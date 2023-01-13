@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import ReactStripe from './components/ReactStripe';
 import StatusNoFlash from './components/StatusNoFlash'
 
 const usersLocale = 'en'
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
         element: <></>,
       },
       // new component route here
+      { path: 'react-stripe', element: <ReactStripe /> },
       { path: 'status-no-flash', element: <StatusNoFlash /> },
     ],
   },
