@@ -27,7 +27,7 @@ const CheckoutForm = () => {
       />
       <CardExpiryElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
       <CardCvcElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
-      <button className="button focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">Submit</button>
+      <button className="button">Submit</button>
     </form>
   )
 }
