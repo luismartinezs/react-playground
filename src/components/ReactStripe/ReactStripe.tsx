@@ -14,14 +14,18 @@ const getStripe = () => {
 
 getStripe()
 
-const StripeElementWrapper = ({ stripeOptions, StripeElement, id }) => {
+type StripeElementWrapperProps = {
+  stripeOptions: any
+  StripeElement: any
+  id?: string
+}
+
+const StripeElementWrapper = ({ stripeOptions, StripeElement, id }: StripeElementWrapperProps) => {
   const [wrapperClasses, setWrapperClasses] = useState('')
   const handleFocus = () => {
-    console.log('focused')
     setWrapperClasses('outline-none ring-2 ring-sky-500')
   }
   const handleBlur = () => {
-    console.log('blurred')
     setWrapperClasses('')
   }
   return (
