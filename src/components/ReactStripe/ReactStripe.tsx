@@ -1,6 +1,8 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js'
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
+import classNames from 'classnames'
+import classnames from 'classnames'
 
 let stripePromise: Promise<Stripe | null> | null
 const getStripe = () => {
@@ -12,21 +14,61 @@ const getStripe = () => {
 
 getStripe()
 
+const StripeElementWrapper = ({ stripeOptions, StripeElement, id }) => {
+  const [wrapperClasses, setWrapperClasses] = useState('')
+  const handleFocus = () => {
+    console.log('focused')
+    setWrapperClasses('outline-none ring-2 ring-sky-500')
+  }
+  const handleBlur = () => {
+    console.log('blurred')
+    setWrapperClasses('')
+  }
+  return (
+    <div className={classnames(wrapperClasses, '')}>
+      <StripeElement
+        id={id}
+        className="px-4 py-2 bg-white border rounded-md"
+        options={stripeOptions}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    </div>
+  )
+}
+
 const CheckoutForm = () => {
   const commonOptions = {
     classes: {
-      focus: 'outline-none ring-2 ring-sky-500',
+      // focus: 'outline-none ring-2 ring-sky-500',
+    },
+    style: {
+      // focus: {
+      //   boxShadow: 'var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+      //   outline: '0',
+      // },
     },
   }
   return (
     <form>
-      <CardNumberElement
-        id="card-number"
-        className="px-4 py-2 my-2 bg-white border rounded-md"
-        options={commonOptions}
-      />
-      <CardExpiryElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
-      <CardCvcElement className="px-4 py-2 my-2 bg-white border rounded-md" options={commonOptions} />
+      <div className="max-w-xl my-2">
+        <label htmlFor="cardNumber">
+          Card number:
+          <StripeElementWrapper StripeElement={CardNumberElement} stripeOptions={commonOptions} id="cardNumber" />
+        </label>
+      </div>
+      <div className="max-w-xl my-2">
+        <label htmlFor="cardExpiry">
+          Card expiry:
+          <StripeElementWrapper StripeElement={CardExpiryElement} stripeOptions={commonOptions} id="cardExpiry" />
+        </label>
+      </div>
+      <div className="max-w-xl my-2">
+        <label htmlFor="cardCvc">
+          CVC:
+          <StripeElementWrapper StripeElement={CardCvcElement} stripeOptions={commonOptions} id="cardCvc" />
+        </label>
+      </div>
       <button className="button">Submit</button>
     </form>
   )
