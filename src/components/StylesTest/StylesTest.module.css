@@ -13,3 +13,11 @@
 .accessibleStyles {
   @apply text-red-500 text-lg font-semibold;
 }
+
+.isPink {
+  @apply text-pink-500 bg-pink-100;
+}
+
+.isRounded {
+  @apply rounded-full border-pink-500 border;
+}
