@@ -28,6 +28,8 @@ const routes = [
     label: 'None',
   },
   // new component link here
+  { path: 'react-hook-form', label: 'ReactHookForm' },
+  { path: 'iframe-input', label: 'IframeInput' },
   { path: 'css-scope', label: 'CssScope' },
   { path: 'classnames-test', label: 'ClassnamesTest' },
   { path: 'react-stripe', label: 'ReactStripe' },

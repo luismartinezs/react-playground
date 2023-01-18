@@ -14,6 +14,8 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import ReactHookForm from './components/ReactHookForm';
+import IframeInput from './components/IframeInput';
 import CssScope from './components/CssScope';
 import ClassnamesTest from './components/ClassnamesTest';
 import ReactStripe from './components/ReactStripe';
@@ -52,6 +54,8 @@ const router = createBrowserRouter([
         element: <></>,
       },
       // new component route here
+      { path: 'react-hook-form', element: <ReactHookForm /> },
+      { path: 'iframe-input', element: <IframeInput /> },
       { path: 'css-scope', element: <CssScope /> },
       { path: 'classnames-test', element: <ClassnamesTest /> },
       { path: 'react-stripe', element: <ReactStripe /> },
