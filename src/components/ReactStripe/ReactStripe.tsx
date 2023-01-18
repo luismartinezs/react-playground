@@ -23,7 +23,7 @@ type StripeElementWrapperProps = {
 const StripeElementWrapper = ({ stripeOptions, StripeElement, id }: StripeElementWrapperProps) => {
   const [wrapperClasses, setWrapperClasses] = useState('')
   const handleFocus = () => {
-    setWrapperClasses('outline-none ring-2 ring-sky-500')
+    setWrapperClasses('outline-none ring-2 ring-sky-500 rounded-md')
   }
   const handleBlur = () => {
     setWrapperClasses('')
