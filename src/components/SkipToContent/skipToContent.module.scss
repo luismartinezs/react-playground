@@ -1,0 +1,11 @@
+.skipToContent {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px;
+  @apply bg-sky-500 text-white;
+}
+
+.skipToContent:focus {
+  top: 0;
+}

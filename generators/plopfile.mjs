@@ -1,6 +1,6 @@
 export default function plopGenerator(plop) {
-  plop.setGenerator("component", {
-    description: "Component",
+  plop.setGenerator("route", {
+    description: "Component with its own Route",
     prompts: [
       {
         type: "input",
@@ -36,6 +36,28 @@ export default function plopGenerator(plop) {
         path: '../src/routes/root.tsx',
         pattern: /(\/\/ new component link here)/gi,
         template: `  { path: '{{kebabCase name}}', label: '{{pascalCase name}}' },`,
+      }
+    ],
+  });
+  plop.setGenerator("component", {
+    description: "Standalone component",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "component name",
+      },
+    ],
+    actions: [
+      {
+        type: "add",
+        path: "../src/components/{{pascalCase name}}/index.ts",
+        templateFile: "templates/component/index.ts.hbs",
+      },
+      {
+        type: "add",
+        path: "../src/components/{{pascalCase name}}/{{pascalCase name}}.tsx",
+        templateFile: "templates/component/component.tsx.hbs",
       }
     ],
   });

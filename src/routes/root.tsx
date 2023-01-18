@@ -1,3 +1,5 @@
+import SkipToContent from '@/components/SkipToContent'
+import { useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 
 const routes = [
@@ -33,8 +35,10 @@ const routes = [
 ]
 
 export default function Root() {
+  const mainContentRef = useRef<HTMLElement>(null)
   return (
     <>
+      <SkipToContent mainContentRef={mainContentRef} />
       <h1 className="text-lg font-bold">React playground</h1>
       <nav className="pb-2 mb-2 border-b border-sky-500">
         <ul className="flex space-x-2">
@@ -45,7 +49,9 @@ export default function Root() {
           ))}
         </ul>
       </nav>
-      <Outlet />
+      <main ref={mainContentRef} tabIndex={-1}>
+        <Outlet />
+      </main>
     </>
   )
 }
