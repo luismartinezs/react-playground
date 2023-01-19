@@ -28,6 +28,7 @@ const routes = [
     label: 'None',
   },
   // new component link here
+  { path: 'counter-game', label: 'CounterGame' },
   { path: 'react-hook-form', label: 'ReactHookForm' },
   { path: 'iframe-input', label: 'IframeInput' },
   { path: 'css-scope', label: 'CssScope' },
