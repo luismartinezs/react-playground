@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { useCountDispatch } from './countProvider'
+import { useCountIncrement } from './countProvider'
 
 const IncreaseButton = () => {
-  const dispatch = useCountDispatch()
+  const increment = useCountIncrement()
 
   return (
-    <button className="button" onClick={() => dispatch({ type: 'increment' })}>
+    <button className="button" onClick={increment}>
       Increase
     </button>
   )

@@ -41,5 +41,17 @@ function useCountDispatch() {
   return useContext(CountDispatchContext)
 }
 
+function useCountDecrement() {
+  const dispatch = useCountDispatch()
+
+  return () => dispatch({ type: 'decrement' })
+}
+
+function useCountIncrement() {
+  const dispatch = useCountDispatch()
+
+  return () => dispatch({ type: 'increment' })
+}
+
 export default CountProvider
-export { CountContext, CountDispatchContext, useCount, useCountDispatch }
+export { CountContext, CountDispatchContext, useCount, useCountDispatch, useCountIncrement, useCountDecrement }
