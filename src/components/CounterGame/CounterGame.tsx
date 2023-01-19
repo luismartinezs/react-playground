@@ -26,6 +26,7 @@ const CounterGame = () => {
         Counter game
       </h2>
       <p>Example of useContext (injection of static context) and useContext + useReducer to create a global store</p>
+      <p>When the context value changes, only components that use it will rerender</p>
       <p>Theme value: {theme}</p>
       <div className="flex space-x-2">
         <IncreaseButton />
