@@ -2,8 +2,10 @@ import { createContext, FC, useContext, useEffect, useMemo, useState } from 'rea
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 import { v4 } from 'uuid'
 
-import { SROnlyToast } from '@/components/SROnly'
+import { SROnlyToast, useToast } from '@/components/SROnly'
 import classnames from 'classnames'
+
+const TIMEOUT = 8_000
 
 export type TDocumentTitleContext = Readonly<{
   useDocumentEntitler: ({ priority, title }: DocumentTitleOptions) => void
@@ -179,7 +181,7 @@ function DocumentTitle() {
     console.debug(`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`)
   })
 
-  return <SROnlyToast timeout={8_000}>{disabledSRAnnounce ? '' : title}</SROnlyToast>
+  return <SROnlyToast timeout={TIMEOUT}>{disabledSRAnnounce ? '' : title}</SROnlyToast>
 }
 
 export function AccessibleDocumentTitle() {
@@ -233,8 +235,8 @@ function DocumentEntitlerSkeleton(props: DocumentTitleOptions) {
   return <DocTitleCard {...props} muted />
 }
 
-function ToggleableDocumentEntitler(props: DocumentTitleOptions) {
-  const [enabled, setEnabled] = useState<boolean>(true)
+function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState?: boolean }) {
+  const [enabled, setEnabled] = useState<boolean>(props.initialState === undefined ? true : props.initialState)
 
   return (
     <div className="relative">
@@ -259,6 +261,7 @@ function ContextStatus() {
   const { useDocumentTitle, useDisableSRAnnounce } = useA11y()
   const title = useDocumentTitle()
   const disabledSRAnnounce = useDisableSRAnnounce()
+  const showToast = useToast(TIMEOUT, [title])
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500">
@@ -270,7 +273,7 @@ function ContextStatus() {
         Live region: <span className="font-bold">{disabledSRAnnounce ? 'off' : 'assertive'}</span>
       </span>
       <span>
-        SR label: <span className="font-bold">{disabledSRAnnounce ? '' : title}</span>
+        SR label: <span className="font-bold">{disabledSRAnnounce || !showToast ? '--' : title}</span>
       </span>
     </div>
   )
@@ -283,9 +286,9 @@ const DocTitle: FC = (): JSX.Element => {
       <AccessibleDocumentTitle />
       <ContextStatus />
       <div className="flex">
-        <ToggleableDocumentEntitler title="First title" priority="page" />
-        <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce />
-        <ToggleableDocumentEntitler title="Third title" priority="modal" />
+        <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
+        <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce initialState={true} />
+        <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce initialState={false} />
       </div>
     </AccessibilityProvider>
   )

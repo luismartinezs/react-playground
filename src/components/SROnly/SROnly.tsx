@@ -16,10 +16,11 @@ type ToastProps = {
   timeout?: number
 }
 
-function useToast(timeout: ToastProps['timeout']) {
+function useToast(timeout: ToastProps['timeout'], deps: any[] = []) {
   const [showToast, setShowToast] = useState(true)
 
   useEffect(() => {
+    setShowToast(true)
     const timer = setTimeout(() => {
       if (timeout && timeout > 0) {
         setShowToast(false)
@@ -28,7 +29,7 @@ function useToast(timeout: ToastProps['timeout']) {
     return () => {
       clearTimeout(timer)
     }
-  }, [])
+  }, deps)
 
   return showToast
 }
@@ -49,6 +50,6 @@ const Container = memo(SROnlyToast)
  * Use this component to announce a label to screen readers on mount. After a timeout, the label will be removed from the
  * DOM, to prevent the screen reader from navigating to it.
  */
-export { Container as SROnlyToast }
+export { Container as SROnlyToast, useToast }
 
 export default memo(SROnly)
