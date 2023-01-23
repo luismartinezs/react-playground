@@ -14,6 +14,8 @@ type ToastProps = {
   children: ReactNode
   /** time in ms to keep the DOM connected */
   timeout?: number
+  /** deps to trigger the timeout */
+  deps?: any[]
 }
 
 function useToast(timeout: ToastProps['timeout'], deps: any[] = []) {
@@ -34,7 +36,7 @@ function useToast(timeout: ToastProps['timeout'], deps: any[] = []) {
   return showToast
 }
 
-function SROnlyToast({ children, timeout = 5_000 }: ToastProps) {
+function SROnlyToast({ children, timeout = 5_000, deps = [] }: ToastProps) {
   const showToast = useToast(timeout)
 
   if (showToast) {

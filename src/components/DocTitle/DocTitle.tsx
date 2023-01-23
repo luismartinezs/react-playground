@@ -2,10 +2,10 @@ import { createContext, FC, useContext, useEffect, useMemo, useState } from 'rea
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 import { v4 } from 'uuid'
 
-import { SROnlyToast, useToast } from '@/components/SROnly'
+import SROnly, { useToast } from '@/components/SROnly'
 import classnames from 'classnames'
 
-const TIMEOUT = 8_000
+const TIMEOUT = 5_000
 
 export type TDocumentTitleContext = Readonly<{
   useDocumentEntitler: ({ priority, title }: DocumentTitleOptions) => void
@@ -164,6 +164,7 @@ function DocumentTitle() {
   const title = useDocumentTitle()
   const disabledSRAnnounce = useDisableSRAnnounce()
   useUpdateDocumentTitle(title)
+  const showToast = useToast(TIMEOUT, [title])
 
   useEffect(() => {
     console.debug('sanity check')
@@ -181,7 +182,7 @@ function DocumentTitle() {
     console.debug(`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`)
   })
 
-  return <SROnlyToast timeout={TIMEOUT}>{disabledSRAnnounce ? '' : title}</SROnlyToast>
+  return <SROnly>{!showToast ? '' : title}</SROnly>
 }
 
 export function AccessibleDocumentTitle() {
@@ -209,7 +210,7 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
     >
       <span>Entitler</span>
       <span>
-        Title: <span className="font-bold">{props.title}</span>
+        Title: <span className="font-bold">{props.title || '--'}</span>
       </span>
       <span>
         Priority: <span className="font-bold">{props.priority || 'page'}</span>
@@ -273,7 +274,7 @@ function ContextStatus() {
         Live region: <span className="font-bold">{disabledSRAnnounce ? 'off' : 'assertive'}</span>
       </span>
       <span>
-        SR label: <span className="font-bold">{disabledSRAnnounce || !showToast ? '--' : title}</span>
+        SROnly title: <span className="font-bold">{!showToast ? '--' : title}</span>
       </span>
     </div>
   )
@@ -283,11 +284,15 @@ const DocTitle: FC = (): JSX.Element => {
   return (
     <AccessibilityProvider>
       <h2>DocTitle</h2>
+      <p>Toggle the modals on / off to see the values change in the status panel.</p>
+      <p>Document title changes with a delay of 500ms to avoid flickering.</p>
+      <p>A live region wraps the SROnly title.</p>
+      <p>Title in SROnly label is set to an empty string after {TIMEOUT}ms.</p>
       <AccessibleDocumentTitle />
       <ContextStatus />
       <div className="flex">
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
-        <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce initialState={true} />
+        <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce initialState={false} />
         <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce initialState={false} />
       </div>
     </AccessibilityProvider>
