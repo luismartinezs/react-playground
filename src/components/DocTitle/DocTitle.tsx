@@ -208,7 +208,7 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
         props.muted && 'text-zinc-500 border-zinc-400'
       )}
     >
-      <span>Entitler</span>
+      <span className="uppercase">Entitler</span>
       <span>
         Title: <span className="font-bold">{props.title || '--'}</span>
       </span>
@@ -265,16 +265,16 @@ function ContextStatus() {
   const showToast = useToast(TIMEOUT, [title])
 
   return (
-    <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500">
-      <span>Status</span>
+    <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
+      <span className="uppercase">Status</span>
       <span>
-        Doc Title: <span className="font-bold">{title}</span>
+        Document Title: <span className="font-bold">{title}</span>
       </span>
       <span>
         Live region: <span className="font-bold">{disabledSRAnnounce ? 'off' : 'assertive'}</span>
       </span>
       <span>
-        SROnly title: <span className="font-bold">{!showToast ? '--' : title}</span>
+        Live region content: <span className="font-bold">{!showToast ? '--' : title}</span>
       </span>
     </div>
   )
@@ -284,7 +284,7 @@ const DocTitle: FC = (): JSX.Element => {
   return (
     <AccessibilityProvider>
       <h2>DocTitle</h2>
-      <p>Toggle the modals on / off to see the values change in the status panel.</p>
+      <p>Toggle the modals on / off to mount / unmount them and see the values change in the status panel.</p>
       <p>Document title changes with a delay of 500ms to avoid flickering.</p>
       <p>A live region wraps the SROnly title.</p>
       <p>Title in SROnly label is set to an empty string after {TIMEOUT}ms.</p>
