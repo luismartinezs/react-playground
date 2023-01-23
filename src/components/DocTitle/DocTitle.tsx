@@ -6,7 +6,7 @@ import { useFlicker, SRFlicker } from './util'
 import SROnly, { useToast } from '@/components/SROnly'
 
 import { AccessibilityProvider, useA11y } from './provider'
-import type { DocumentTitleOptions } from './types'
+import type { DocumentTitleOptions, WithSrFlicker } from './types'
 
 const TIMEOUT = 3_000
 
@@ -74,7 +74,7 @@ function AccessibleDocumentTitle() {
   )
 }
 
-function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
+function DocTitleCard(props: WithSrFlicker<DocumentTitleOptions> & { muted?: boolean }) {
   return (
     <div
       className={classnames(
@@ -99,7 +99,7 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
   )
 }
 
-function DocumentEntitler(props: DocumentTitleOptions) {
+function DocumentEntitler(props: WithSrFlicker<DocumentTitleOptions>) {
   useA11y().useDocumentEntitler({
     priority: props.priority || 'page',
     title: props.title,
@@ -110,11 +110,11 @@ function DocumentEntitler(props: DocumentTitleOptions) {
   return <DocTitleCard {...props} />
 }
 
-function DocumentEntitlerSkeleton(props: DocumentTitleOptions) {
+function DocumentEntitlerSkeleton(props: WithSrFlicker<DocumentTitleOptions>) {
   return <DocTitleCard {...props} muted />
 }
 
-function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState?: boolean }) {
+function ToggleableDocumentEntitler(props: WithSrFlicker<DocumentTitleOptions> & { initialState?: boolean }) {
   const [enabled, setEnabled] = useState<boolean>(props.initialState === undefined ? true : props.initialState)
 
   return (

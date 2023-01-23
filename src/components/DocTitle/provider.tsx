@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 
 import { useId } from './util'
-import type { Context, DocumentEntitlerItem, DocumentTitleOptions } from './types'
+import type { Context, DocumentEntitlerItem, DocumentTitleOptions, WithSrFlicker } from './types'
 import { PRIORITY_SORT_MAP } from './constants'
 
 function useDocumentTitleObservable() {
@@ -77,11 +77,11 @@ function useDocumentTitleObservable() {
         title = '',
         disableSRAnnounce = false,
         srFlicker = false,
-      }: DocumentTitleOptions) => {
+      }: WithSrFlicker<DocumentTitleOptions>) => {
         const id = useId()
 
         useEffect(() => {
-          addEntitler({ id, priority, title, disableSRAnnounce, srFlicker })
+          addEntitler({ id, priority, title, disableSRAnnounce })
           return () => {
             if (srFlicker) {
               addSRFlicker()
