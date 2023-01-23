@@ -1,121 +1,20 @@
-import { createContext, FC, useContext, useEffect, useMemo, useState } from 'react'
-import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
-import { v4 } from 'uuid'
-
-import SROnly, { useToast } from '@/components/SROnly'
+import { FC, useEffect, useState } from 'react'
 import classnames from 'classnames'
 
-const TIMEOUT = 5_000
+import { useFlicker, SRFlicker } from './util'
 
-export type TDocumentTitleContext = Readonly<{
-  useDocumentEntitler: ({ priority, title }: DocumentTitleOptions) => void
-  useDocumentTitle: () => string
-  useDisableSRAnnounce: () => boolean
-}>
+import SROnly, { useToast } from '@/components/SROnly'
 
-type Context = Readonly<TDocumentTitleContext>
+import { AccessibilityProvider, useA11y } from './provider'
+import type { DocumentTitleOptions } from './types'
 
-export function useId(): string {
-  return useMemo(() => v4(), [])
-}
+const TIMEOUT = 3_000
 
-const PRIORITY_SORT_MAP = Object.freeze({
-  page: 0,
-  modal: 1,
-  stackedModal: 2, // for a modal stacked on top of another modal
-  topModal: 3, // modal that shows on top of any other modal
-})
-export type Priority = keyof typeof PRIORITY_SORT_MAP
-type DocumentTitleOptions = { priority?: Priority; title?: string; disableSRAnnounce?: boolean }
-type DocumentEntitlerItem = Required<DocumentTitleOptions> & {
-  id: string
-}
+const liveRegion = (disabledSRAnnounce: boolean) => (disabledSRAnnounce ? 'off' : 'assertive')
 
-export function useDocumentTitleObservable() {
-  return useMemo(() => {
-    const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
+const liveRegionContent = (showToast: boolean, title: string) => (!showToast ? '--' : title)
 
-    function addEntitler(item: DocumentEntitlerItem) {
-      console.debug('addEntitler', item)
-      return documentEntitlerItems$.next([...documentEntitlerItems$.getValue(), item])
-    }
-
-    function removeEntitler(id: string) {
-      console.debug('removeEntitler')
-      documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
-    }
-
-    function pipeDocumentEntitlerItems<Value>(
-      mappingFn: (items: DocumentEntitlerItem[]) => Value,
-      debounceTime: number
-    ): Observable<Value> {
-      return documentEntitlerItems$.pipe(
-        map(mappingFn),
-        distinctUntilChanged(),
-        debounce(() => timer(debounceTime))
-      )
-    }
-
-    function sortByPriority(a: DocumentEntitlerItem, b: DocumentEntitlerItem) {
-      return PRIORITY_SORT_MAP[b.priority] <= PRIORITY_SORT_MAP[a.priority] ? -1 : 1
-    }
-
-    function subscribeToDocumentTitle(callback: (value: string) => void) {
-      const documentTitle$ = pipeDocumentEntitlerItems<string>((state) => {
-        return state.filter((item) => item.title).sort(sortByPriority)[0]?.title || ''
-        // set a debounce time so that page title being announced is less likely to happen while modal is rendering
-      }, 500)
-      const sub = documentTitle$.subscribe(callback)
-
-      return () => sub.unsubscribe()
-    }
-
-    function subscribeToDisableSRAnnounce(callback: (value: boolean) => void) {
-      const disableSRAnnounce$ = pipeDocumentEntitlerItems<boolean>((state) => {
-        // alternatively check whether any entitler set disableSRAnnounce to true, but either way should work with our main use case (modal with higher priority disabling SR announce)
-        return Boolean(state.sort(sortByPriority)[0]?.disableSRAnnounce)
-      }, 0)
-      // debounce time to 0 so that the SR announce is disabled before any title change happens, so page title gets announced after a modal closes (context change)
-      const sub = disableSRAnnounce$.subscribe(callback)
-
-      return () => sub.unsubscribe()
-    }
-
-    return {
-      useDocumentEntitler: ({
-        // by default set to the lowest priority
-        priority = 'page',
-        title = '',
-        disableSRAnnounce = false,
-      }: DocumentTitleOptions) => {
-        const id = useId()
-
-        useEffect(() => {
-          addEntitler({ id, priority, title, disableSRAnnounce })
-          return () => removeEntitler(id)
-        }, [priority, title])
-      },
-      useDocumentTitle: () => {
-        const [title, setTitle] = useState<string>('')
-
-        useEffect(() => {
-          return subscribeToDocumentTitle(setTitle)
-        }, [])
-
-        return title
-      },
-      useDisableSRAnnounce: () => {
-        const [disableSRAnnounce, setDisableSRAnnounce] = useState<boolean>(false)
-
-        useEffect(() => {
-          return subscribeToDisableSRAnnounce(setDisableSRAnnounce)
-        }, [])
-
-        return disableSRAnnounce
-      },
-    }
-  }, [])
-}
+const toastDeps = (title: string, disableSRAnnounce: boolean) => [title, disableSRAnnounce]
 
 function useUpdateDocumentTitle(title: string) {
   useEffect(() => {
@@ -129,42 +28,13 @@ function useUpdateDocumentTitle(title: string) {
   }, [title])
 }
 
-export function developerWarning(): never {
-  throw new Error("Don't use a11y outside of accessibility provider")
-}
-
-export const DocumentTitleContext = {
-  useDocumentEntitler: developerWarning,
-  useDocumentTitle: developerWarning,
-  useDisableSRAnnounce: developerWarning,
-}
-
-const AccessibilityContext = createContext<Context>({
-  ...DocumentTitleContext,
-})
-
-export function useA11y() {
-  return useContext(AccessibilityContext)
-}
-
-function AccessibilityProvider({ children }: { children: React.ReactNode }) {
-  const documentTitleObservable = useDocumentTitleObservable()
-
-  const context = useMemo(() => {
-    return {
-      ...documentTitleObservable,
-    }
-  }, [])
-
-  return <AccessibilityContext.Provider value={context}>{children}</AccessibilityContext.Provider>
-}
-
 function DocumentTitle() {
-  const { useDocumentTitle, useDisableSRAnnounce } = useA11y()
+  const { useDocumentTitle, useDisableSRAnnounce, useSRFlicker } = useA11y()
   const title = useDocumentTitle()
   const disabledSRAnnounce = useDisableSRAnnounce()
   useUpdateDocumentTitle(title)
-  const showToast = useToast(TIMEOUT, [title])
+  const srFlicker = useSRFlicker()
+  const showToast = useToast(TIMEOUT, toastDeps(title, disabledSRAnnounce))
 
   useEffect(() => {
     console.debug('sanity check')
@@ -182,10 +52,14 @@ function DocumentTitle() {
     console.debug(`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`)
   })
 
-  return <SROnly>{!showToast ? '' : title}</SROnly>
+  return (
+    <SROnly>
+      <SRFlicker condition={srFlicker}>{liveRegionContent(showToast, title)}</SRFlicker>
+    </SROnly>
+  )
 }
 
-export function AccessibleDocumentTitle() {
+function AccessibleDocumentTitle() {
   const { useDisableSRAnnounce } = useA11y()
   const disabledSRAnnounce = useDisableSRAnnounce()
 
@@ -194,7 +68,7 @@ export function AccessibleDocumentTitle() {
   }, [disabledSRAnnounce])
 
   return (
-    <span aria-live={disabledSRAnnounce ? 'off' : 'assertive'}>
+    <span aria-live={liveRegion(disabledSRAnnounce)}>
       <DocumentTitle />
     </span>
   )
@@ -218,15 +92,19 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
       <span>
         DisableSR: <span className="font-bold">{props.disableSRAnnounce ? 'true' : 'false'}</span>
       </span>
+      <span>
+        SR Flicker: <span className="font-bold">{props.srFlicker ? 'true' : 'false'}</span>
+      </span>
     </div>
   )
 }
 
-export function DocumentEntitler(props: DocumentTitleOptions) {
+function DocumentEntitler(props: DocumentTitleOptions) {
   useA11y().useDocumentEntitler({
     priority: props.priority || 'page',
     title: props.title,
     disableSRAnnounce: props.disableSRAnnounce,
+    srFlicker: props.srFlicker,
   })
 
   return <DocTitleCard {...props} />
@@ -259,10 +137,12 @@ function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState
 }
 
 function ContextStatus() {
-  const { useDocumentTitle, useDisableSRAnnounce } = useA11y()
+  const { useDocumentTitle, useDisableSRAnnounce, useSRFlicker } = useA11y()
   const title = useDocumentTitle()
   const disabledSRAnnounce = useDisableSRAnnounce()
-  const showToast = useToast(TIMEOUT, [title])
+  const showToast = useToast(TIMEOUT, toastDeps(title, disabledSRAnnounce))
+  const srFlicker = useSRFlicker()
+  const flicker = useFlicker(srFlicker)
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
@@ -271,10 +151,13 @@ function ContextStatus() {
         Document Title: <span className="font-bold">{title}</span>
       </span>
       <span>
-        Live region: <span className="font-bold">{disabledSRAnnounce ? 'off' : 'assertive'}</span>
+        Live region: <span className="font-bold">{liveRegion(disabledSRAnnounce)}</span>
       </span>
       <span>
-        Live region content: <span className="font-bold">{!showToast ? '--' : title}</span>
+        Live region aria-hidden: <span className="font-bold">{flicker ? 'true' : 'false'}</span>
+      </span>
+      <span>
+        Live region content: <span className="font-bold">{liveRegionContent(showToast, title)}</span>
       </span>
     </div>
   )
@@ -294,9 +177,21 @@ const DocTitle: FC = (): JSX.Element => {
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
         <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce initialState={false} />
         <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce initialState={false} />
+        <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce srFlicker initialState={false} />
       </div>
     </AccessibilityProvider>
   )
 }
 
 export default DocTitle
+export {
+  useUpdateDocumentTitle,
+  AccessibilityProvider,
+  DocumentTitle,
+  AccessibleDocumentTitle,
+  DocumentEntitler,
+  DocumentEntitlerSkeleton,
+  ToggleableDocumentEntitler,
+  ContextStatus,
+  DocTitle,
+}
