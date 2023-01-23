@@ -23,11 +23,9 @@ const routes = [
     path: 'react-intl',
     label: 'React-intl',
   },
-  {
-    path: 'none',
-    label: 'None',
-  },
+
   // new component link here
+  { path: 'doc-title', label: 'DocTitle' },
   { path: 'counter-game', label: 'CounterGame' },
   { path: 'react-hook-form', label: 'ReactHookForm' },
   { path: 'iframe-input', label: 'IframeInput' },
@@ -35,6 +33,10 @@ const routes = [
   { path: 'classnames-test', label: 'ClassnamesTest' },
   { path: 'react-stripe', label: 'ReactStripe' },
   { path: 'status-no-flash', label: 'StatusNoFlash' },
+  {
+    path: 'none',
+    label: 'None',
+  },
 ]
 
 export default function Root() {

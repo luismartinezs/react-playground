@@ -14,12 +14,13 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
-import CounterGame from './components/CounterGame';
-import ReactHookForm from './components/ReactHookForm';
-import IframeInput from './components/IframeInput';
-import CssScope from './components/CssScope';
-import ClassnamesTest from './components/ClassnamesTest';
-import ReactStripe from './components/ReactStripe';
+import DocTitle from './components/DocTitle'
+import CounterGame from './components/CounterGame'
+import ReactHookForm from './components/ReactHookForm'
+import IframeInput from './components/IframeInput'
+import CssScope from './components/CssScope'
+import ClassnamesTest from './components/ClassnamesTest'
+import ReactStripe from './components/ReactStripe'
 import StatusNoFlash from './components/StatusNoFlash'
 
 const usersLocale = 'en'
@@ -50,11 +51,8 @@ const router = createBrowserRouter([
         path: 'react-intl',
         element: <ReactIntl />,
       },
-      {
-        path: 'none',
-        element: <></>,
-      },
       // new component route here
+      { path: 'doc-title', element: <DocTitle /> },
       { path: 'counter-game', element: <CounterGame /> },
       { path: 'react-hook-form', element: <ReactHookForm /> },
       { path: 'iframe-input', element: <IframeInput /> },
@@ -62,6 +60,10 @@ const router = createBrowserRouter([
       { path: 'classnames-test', element: <ClassnamesTest /> },
       { path: 'react-stripe', element: <ReactStripe /> },
       { path: 'status-no-flash', element: <StatusNoFlash /> },
+      {
+        path: 'none',
+        element: <></>,
+      },
     ],
   },
 ])
