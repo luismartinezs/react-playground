@@ -8,6 +8,7 @@ import { PRIORITY_SORT_MAP } from './constants'
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
+    const srFlicker$ = new BehaviorSubject<boolean>(false)
 
     function addEntitler(item: DocumentEntitlerItem) {
       console.debug('addEntitler', item)
@@ -17,6 +18,14 @@ function useDocumentTitleObservable() {
     function removeEntitler(id: string) {
       console.debug('removeEntitler')
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
+    }
+
+    function addSRFlicker() {
+      console.debug('addSRFlicker')
+      srFlicker$.next(true)
+      setTimeout(() => {
+        srFlicker$.next(false)
+      }, 500)
     }
 
     function pipeDocumentEntitlerItems<Value>(
@@ -56,9 +65,6 @@ function useDocumentTitleObservable() {
     }
 
     function subscribeToSRFlicker(callback: (value: boolean) => void) {
-      const srFlicker$ = pipeDocumentEntitlerItems<boolean>((state) => {
-        return Boolean(state.sort(sortByPriority)[0]?.srFlicker)
-      }, 0)
       const sub = srFlicker$.subscribe(callback)
 
       return () => sub.unsubscribe()
@@ -76,7 +82,12 @@ function useDocumentTitleObservable() {
 
         useEffect(() => {
           addEntitler({ id, priority, title, disableSRAnnounce, srFlicker })
-          return () => removeEntitler(id)
+          return () => {
+            if (srFlicker) {
+              addSRFlicker()
+            }
+            removeEntitler(id)
+          }
         }, [priority, title])
       },
       useDocumentTitle: () => {

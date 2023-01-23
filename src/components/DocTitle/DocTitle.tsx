@@ -151,7 +151,7 @@ function ContextStatus() {
         Document Title: <span className="font-bold">{title}</span>
       </span>
       <span>
-        Live region: <span className="font-bold">{liveRegion(disabledSRAnnounce)}</span>
+        Live region aria-live: <span className="font-bold">{liveRegion(disabledSRAnnounce)}</span>
       </span>
       <span>
         Live region aria-hidden: <span className="font-bold">{flicker ? 'true' : 'false'}</span>
@@ -168,9 +168,10 @@ const DocTitle: FC = (): JSX.Element => {
     <AccessibilityProvider>
       <h2>DocTitle</h2>
       <p>Toggle the modals on / off to mount / unmount them and see the values change in the status panel.</p>
-      <p>Document title changes with a delay of 500ms to avoid flickering.</p>
-      <p>A live region wraps the SROnly title.</p>
+      <p>Document title changes with a delay of 500ms to avoid quick successive title changes.</p>
+      <p>A live region wraps the SROnly title, which can be toggled off.</p>
       <p>Title in SROnly label is set to an empty string after {TIMEOUT}ms.</p>
+      <p>Live region content SR visibility can be "flickered" to force the SR to read the contents</p>
       <AccessibleDocumentTitle />
       <ContextStatus />
       <div className="flex">
