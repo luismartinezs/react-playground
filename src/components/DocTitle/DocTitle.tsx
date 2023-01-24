@@ -5,7 +5,7 @@ import SROnly, { useToast } from '@/components/SROnly'
 
 import { useFlicker, SRFlicker, debug, useToggle } from './util'
 import { AccessibilityProvider, useA11y } from './provider'
-import type { DocumentTitleOptions } from './types'
+import type { DocumentTitleOptions, Priority } from './types'
 import { TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
 const useDebug = (args: unknown[], deps: unknown[]) => {
@@ -181,6 +181,59 @@ function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState
   )
 }
 
+function DocumentUpdaterStatic({
+  muted = false,
+  title,
+  priority,
+}: {
+  title: string
+  priority?: Priority
+  muted?: boolean
+}) {
+  return (
+    <Card muted={muted}>
+      <span className="uppercase">Updater</span>
+      <span className="whitespace-nowrap">
+        Title: <span className="font-bold">{title || '--'}</span>
+      </span>
+      <span className="whitespace-nowrap">
+        Priority: <span className="font-bold">{priority || 'page'}</span>
+      </span>
+    </Card>
+  )
+}
+
+function DocumentUpdater(props: { title: string; priority?: Priority }) {
+  useA11y().useUpdateDocumentTitle({
+    priority: props.priority || 'page',
+    title: props.title,
+  })
+
+  return <DocumentUpdaterStatic priority={props.priority || 'page'} title={props.title} />
+}
+
+function ToggleableUpdateDocumentTitle(props: { title: string; priority?: Priority; initialState?: boolean }) {
+  const [enabled, toggle] = useToggle(props.initialState)
+
+  return (
+    <div className="relative">
+      <button
+        className={classnames(
+          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
+          enabled ? 'bg-green-400' : 'bg-red-400'
+        )}
+        onClick={() => {
+          console.log('toggle')
+          toggle()
+        }}
+      >
+        {enabled ? 'ON' : 'OFF'}
+      </button>
+      {enabled ? <DocumentUpdater {...props} /> : <DocumentUpdaterStatic {...props} muted={true} />}
+    </div>
+  )
+}
+
 function ToggleableAnnounceTitleDisabler({ initialState }: { initialState?: boolean }) {
   const [enabled, toggle] = useToggle(initialState)
 
@@ -252,6 +305,7 @@ const DocTitle: FC = (): JSX.Element => {
           announceTitleOnUnmount
           initialState={false}
         />
+        <ToggleableUpdateDocumentTitle title="Updated title" priority="modal" initialState={false} />
         <ToggleableAnnounceTitleDisabler initialState={false} />
       </div>
     </AccessibilityProvider>

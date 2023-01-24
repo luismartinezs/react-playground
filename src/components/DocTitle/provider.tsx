@@ -105,8 +105,15 @@ function useDocumentTitleObservable() {
       useAnnounceTitleOnUnmount: () => {
         //
       },
-      useUpdateDocumentTitle: () => {
-        //
+      useUpdateDocumentTitle: ({ priority = 'page', title = '' }: Partial<DocumentTitleOptions>) => {
+        const id = useId()
+
+        useEffect(() => {
+          addEntitler({ id, priority, title, disableAnnounceTitle: false })
+          return () => {
+            removeEntitler(id)
+          }
+        }, [priority, title])
       },
       useDocumentTitle: () => {
         const [title, setTitle] = useState<string>('')
