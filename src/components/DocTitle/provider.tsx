@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 
 import { useId, debug } from './util'
-import type { Context, DocumentEntitlerItem, DocumentTitleOptions } from './types'
+import type { Context, DocumentEntitlerItem, DocumentTitleOptions, Priority } from './types'
 import { PRIORITY_SORT_MAP, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT } from './constants'
 
 function useDocumentTitleObservable() {
@@ -90,8 +90,17 @@ function useDocumentTitleObservable() {
           }
         }, [priority, title])
       },
-      useAnnounceTitleDisabler: () => {
-        //
+      useAnnounceTitleDisabler: ({
+        priority,
+      }: {
+        priority?: Priority
+      } = {}) => {
+        const id = useId()
+
+        useEffect(() => {
+          addEntitler({ id, priority: priority || 'max', title: '', disableAnnounceTitle: true })
+          return () => removeEntitler(id)
+        }, [priority])
       },
       useAnnounceTitleOnUnmount: () => {
         //

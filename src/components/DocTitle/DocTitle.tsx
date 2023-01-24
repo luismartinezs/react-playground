@@ -3,7 +3,7 @@ import classnames from 'classnames'
 
 import SROnly, { useToast } from '@/components/SROnly'
 
-import { useFlicker, SRFlicker, debug } from './util'
+import { useFlicker, SRFlicker, debug, useToggle } from './util'
 import { AccessibilityProvider, useA11y } from './provider'
 import type { DocumentTitleOptions } from './types'
 import { TITLE_LIVE_REGION_TIMEOUT } from './constants'
@@ -68,14 +68,22 @@ function AccessibleDocumentTitle() {
   )
 }
 
-function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
+function Card({ children, muted = false }: { children: React.ReactNode; muted?: boolean }) {
   return (
     <div
       className={classnames(
         'flex flex-col p-4 m-2 border rounded-xl border-sky-500',
-        props.muted && 'text-zinc-500 border-zinc-400'
+        muted && 'text-zinc-500 border-zinc-400'
       )}
     >
+      {children}
+    </div>
+  )
+}
+
+function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
+  return (
+    <Card muted={props.muted}>
       <span className="uppercase">Entitler</span>
       <span className="whitespace-nowrap">
         Title: <span className="font-bold">{props.title || '--'}</span>
@@ -89,8 +97,51 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
       <span className="whitespace-nowrap">
         @unmount: <span className="font-bold">{props.announceTitleOnUnmount ? 'true' : 'false'}</span>
       </span>
-    </div>
+    </Card>
   )
+}
+
+function AnnounceTitleOnUnmount() {
+  const { useAnnounceTitleOnUnmount } = useA11y()
+  useAnnounceTitleOnUnmount()
+
+  return (
+    <Card>
+      <span className="uppercase">Toggler</span>
+      <span>Announce title on unmount</span>
+    </Card>
+  )
+}
+
+function DocumentTitleUpdater() {
+  const { useUpdateDocumentTitle } = useA11y()
+  useUpdateDocumentTitle({
+    priority: 'modal',
+    title: 'Document title updated',
+  })
+
+  return (
+    <Card>
+      <span className="uppercase">Toggler</span>
+      <span>Document title updater</span>
+    </Card>
+  )
+}
+
+function DocumentTitleDisablerStatic({ muted = false }: { muted?: boolean }) {
+  return (
+    <Card muted={muted}>
+      <span className="uppercase">Toggler</span>
+      <span>Document title disabler</span>
+    </Card>
+  )
+}
+
+function DocumentTitleDisabler() {
+  const { useAnnounceTitleDisabler } = useA11y()
+  useAnnounceTitleDisabler()
+
+  return <DocumentTitleDisablerStatic />
 }
 
 function DocumentEntitler(props: DocumentTitleOptions) {
@@ -109,7 +160,7 @@ function DocumentEntitlerSkeleton(props: DocumentTitleOptions) {
 }
 
 function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState?: boolean }) {
-  const [enabled, setEnabled] = useState<boolean>(props.initialState === undefined ? true : props.initialState)
+  const [enabled, toggle] = useToggle(props.initialState)
 
   return (
     <div className="relative">
@@ -120,12 +171,34 @@ function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState
         )}
         onClick={() => {
           console.log('toggle')
-          setEnabled(!enabled)
+          toggle()
         }}
       >
         {enabled ? 'ON' : 'OFF'}
       </button>
       {enabled ? <DocumentEntitler {...props} /> : <DocumentEntitlerSkeleton {...props} />}
+    </div>
+  )
+}
+
+function ToggleableAnnounceTitleDisabler({ initialState }: { initialState?: boolean }) {
+  const [enabled, toggle] = useToggle(initialState)
+
+  return (
+    <div className="relative">
+      <button
+        className={classnames(
+          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
+          enabled ? 'bg-green-400' : 'bg-red-400'
+        )}
+        onClick={() => {
+          console.log('toggle')
+          toggle()
+        }}
+      >
+        {enabled ? 'ON' : 'OFF'}
+      </button>
+      {enabled ? <DocumentTitleDisabler /> : <DocumentTitleDisablerStatic muted={true} />}
     </div>
   )
 }
@@ -179,6 +252,7 @@ const DocTitle: FC = (): JSX.Element => {
           announceTitleOnUnmount
           initialState={false}
         />
+        <ToggleableAnnounceTitleDisabler initialState={false} />
       </div>
     </AccessibilityProvider>
   )
