@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 
-import { useId } from './util'
+import { useId, debug } from './util'
 import type { Context, DocumentEntitlerItem, DocumentTitleOptions, WithSrFlicker } from './types'
 import { PRIORITY_SORT_MAP } from './constants'
 
@@ -11,17 +11,17 @@ function useDocumentTitleObservable() {
     const srFlicker$ = new BehaviorSubject<boolean>(false)
 
     function addEntitler(item: DocumentEntitlerItem) {
-      console.debug('addEntitler', item)
+      debug('addEntitler', item)
       return documentEntitlerItems$.next([...documentEntitlerItems$.getValue(), item])
     }
 
     function removeEntitler(id: string) {
-      console.debug('removeEntitler')
+      debug('removeEntitler')
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
     }
 
     function addSRFlicker() {
-      console.debug('addSRFlicker')
+      debug('addSRFlicker')
       srFlicker$.next(true)
       setTimeout(() => {
         srFlicker$.next(false)

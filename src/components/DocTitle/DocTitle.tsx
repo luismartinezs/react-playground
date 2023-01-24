@@ -1,14 +1,18 @@
 import { FC, useEffect, useState } from 'react'
 import classnames from 'classnames'
 
-import { useFlicker, SRFlicker } from './util'
-
 import SROnly, { useToast } from '@/components/SROnly'
 
+import { useFlicker, SRFlicker, debug } from './util'
 import { AccessibilityProvider, useA11y } from './provider'
 import type { DocumentTitleOptions, WithSrFlicker } from './types'
+import { DEBUG, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
-const TIMEOUT = 3_000
+const useDebug = (args: unknown[], deps: unknown[]) => {
+  useEffect(() => {
+    debug(...args)
+  }, deps)
+}
 
 const liveRegion = (disabledSRAnnounce: boolean) => (disabledSRAnnounce ? 'off' : 'assertive')
 
@@ -34,23 +38,12 @@ function DocumentTitle() {
   const disabledSRAnnounce = useDisableSRAnnounce()
   useUpdateDocumentTitle(title)
   const srFlicker = useSRFlicker()
-  const showToast = useToast(TIMEOUT, toastDeps(title, disabledSRAnnounce))
+  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disabledSRAnnounce))
 
-  useEffect(() => {
-    console.debug('sanity check')
-  }, [])
-
-  useEffect(() => {
-    console.debug('====> title changed', title)
-  }, [title])
-
-  useEffect(() => {
-    console.debug('====> disabledSRAnnounce changed', disabledSRAnnounce)
-  }, [disabledSRAnnounce])
-
-  useEffect(() => {
-    console.debug(`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`)
-  })
+  useDebug(['Sanity', 'check'], [])
+  useDebug(['====> title changed', title], [title])
+  useDebug(['====> disabledSRAnnounce changed', disabledSRAnnounce], [disabledSRAnnounce])
+  useDebug([`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`], [title, disabledSRAnnounce])
 
   return (
     <SROnly>
@@ -63,9 +56,7 @@ function AccessibleDocumentTitle() {
   const { useDisableSRAnnounce } = useA11y()
   const disabledSRAnnounce = useDisableSRAnnounce()
 
-  useEffect(() => {
-    console.debug(`aria-live=${disabledSRAnnounce ? 'off' : 'assertive'}`)
-  }, [disabledSRAnnounce])
+  useDebug([`aria-live=${disabledSRAnnounce ? 'off' : 'assertive'}`], [disabledSRAnnounce])
 
   return (
     <span aria-live={liveRegion(disabledSRAnnounce)}>
@@ -140,7 +131,7 @@ function ContextStatus() {
   const { useDocumentTitle, useDisableSRAnnounce, useSRFlicker } = useA11y()
   const title = useDocumentTitle()
   const disabledSRAnnounce = useDisableSRAnnounce()
-  const showToast = useToast(TIMEOUT, toastDeps(title, disabledSRAnnounce))
+  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disabledSRAnnounce))
   const srFlicker = useSRFlicker()
   const flicker = useFlicker(srFlicker)
 
@@ -170,7 +161,7 @@ const DocTitle: FC = (): JSX.Element => {
       <p>Toggle the modals on / off to mount / unmount them and see the values change in the status panel.</p>
       <p>Document title changes with a delay of 500ms to avoid quick successive title changes.</p>
       <p>A live region wraps the SROnly title, which can be toggled off.</p>
-      <p>Title in SROnly label is set to an empty string after {TIMEOUT}ms.</p>
+      <p>Title in SROnly label is set to an empty string after {TITLE_LIVE_REGION_TIMEOUT}ms.</p>
       <p>Live region content SR visibility can be "flickered" to force the SR to read the contents</p>
       <AccessibleDocumentTitle />
       <ContextStatus />

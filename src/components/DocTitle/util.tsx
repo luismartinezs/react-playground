@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { v4 } from 'uuid'
 
+import { DEBUG } from './constants'
+
 function useId(): string {
   return useMemo(() => v4(), [])
 }
@@ -38,4 +40,10 @@ function SRFlicker({
   return <span aria-hidden={flicker}>{children}</span>
 }
 
-export { useId, useFlicker, SRFlicker }
+function debug(...args: unknown[]) {
+  if (DEBUG) {
+    console.debug(...args)
+  }
+}
+
+export { useId, useFlicker, SRFlicker, debug }
