@@ -5,6 +5,8 @@ export const PRIORITY_SORT_MAP = Object.freeze({
   topModal: 3, // modal that shows on top of any other modal
   max: 10,
 })
+
+export const TITLE_DEBOUNCE_TIME = 500
 export const TITLE_LIVE_REGION_TIMEOUT = 3e3
 export const ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT = 500
 

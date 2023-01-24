@@ -3,10 +3,21 @@ import classnames from 'classnames'
 
 import SROnly from '@/components/SROnly'
 
-import { useFlicker, SRFlicker, useToggle, liveRegion, liveRegionContent, toastDeps, useToast, useDebug } from './util'
+import {
+  useFlicker,
+  SRFlicker,
+  useToggle,
+  liveRegion,
+  liveRegionContent,
+  toastDeps,
+  useToast,
+  useDebug,
+  flickerCondition,
+  liveRegionAriaHidden,
+} from './util'
 import { AccessibilityProvider, useA11y } from './provider'
 import type { DocumentTitleOptions, Priority } from './types'
-import { TITLE_LIVE_REGION_TIMEOUT } from './constants'
+import { ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
 function useUpdateDocumentTitle(title: string) {
   useEffect(() => {
@@ -21,8 +32,9 @@ function useUpdateDocumentTitle(title: string) {
 }
 
 function DocumentTitle() {
-  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
+  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent, useAnnouncedTitle } = useA11y()
   const documentTitle = useDocumentTitle()
+  const announcedTitle = useAnnouncedTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
   useUpdateDocumentTitle(documentTitle)
   const announceTitleEvent = useAnnounceTitleEvent()
@@ -31,19 +43,19 @@ function DocumentTitle() {
     toastDeps(documentTitle, disableAnnounceTitle, announceTitleEvent)
   )
 
-  useDebug(['Sanity', 'check'], [])
-  useDebug(['====> title changed', documentTitle], [documentTitle])
-  useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
-  useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
-  useDebug(
-    [`<SROnlyToast>${liveRegionContent(showToast, documentTitle, disableAnnounceTitle)}</SROnlyToast>`],
-    [documentTitle, disableAnnounceTitle]
-  )
+  // useDebug(['Sanity', 'check'], [])
+  // useDebug(['====> title changed', documentTitle], [documentTitle])
+  // useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
+  // useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
+  // useDebug(
+  //   [`<SROnlyToast>${liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}</SROnlyToast>`],
+  //   [announcedTitle, disableAnnounceTitle]
+  // )
 
   return (
     <SROnly>
-      <SRFlicker condition={announceTitleEvent}>
-        {liveRegionContent(showToast, documentTitle, disableAnnounceTitle)}
+      <SRFlicker condition={flickerCondition({ announceTitleEvent })} timeout={ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT}>
+        {liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}
       </SRFlicker>
     </SROnly>
   )
@@ -53,7 +65,7 @@ function AccessibleDocumentTitle() {
   const { useDisableAnnounceTitle } = useA11y()
   const disableAnnounceTitle = useDisableAnnounceTitle()
 
-  useDebug([`aria-live=${disableAnnounceTitle ? 'off' : 'assertive'}`], [disableAnnounceTitle])
+  // useDebug([`aria-live=${disableAnnounceTitle ? 'off' : 'assertive'}`], [disableAnnounceTitle])
 
   return (
     <span aria-live={liveRegion(disableAnnounceTitle)}>
@@ -289,8 +301,9 @@ function ToggleableAnnounceTitleOnUnmount({ initialState }: { initialState?: boo
 }
 
 function ContextStatus() {
-  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
+  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent, useAnnouncedTitle } = useA11y()
   const title = useDocumentTitle()
+  const announcedTitle = useAnnouncedTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
   const announceTitleEvent = useAnnounceTitleEvent()
   const announceTitleFlicker = useFlicker(announceTitleEvent)
@@ -300,17 +313,18 @@ function ContextStatus() {
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
       <span className="uppercase">Status</span>
       <span>
-        Document Title: <span className="font-bold">{title}</span>
+        Document Title: <span className="font-bold">{title || '--'}</span>
       </span>
       <span>
         Live region aria-live: <span className="font-bold">{liveRegion(disableAnnounceTitle)}</span>
       </span>
       <span>
-        Live region aria-hidden: <span className="font-bold">{announceTitleFlicker ? 'true' : 'false'}</span>
+        Live region aria-hidden:{' '}
+        <span className="font-bold">{flickerCondition({ announceTitleEvent }) ? 'true' : 'false'}</span>
       </span>
       <span>
         Live region content:{' '}
-        <span className="font-bold">{liveRegionContent(showToast, title, disableAnnounceTitle)}</span>
+        <span className="font-bold">{liveRegionContent(showToast, announcedTitle, disableAnnounceTitle) || '--'}</span>
       </span>
     </div>
   )

@@ -60,10 +60,13 @@ function useToggle(initialState = false) {
   return [state, toggle] as const
 }
 
-const liveRegion = (disableAnnounceTitle: boolean) => (disableAnnounceTitle ? 'off' : 'assertive')
+const liveRegion = (disableAnnounceTitle: boolean): 'assertive' | 'off' => 'assertive'
 
-const liveRegionContent = (showToast: boolean, title: string, disableAnnounceTitle: boolean) =>
-  !showToast || disableAnnounceTitle ? '--' : title
+const liveRegionContent = (showToast: boolean, announcedTitle: string, disableAnnounceTitle: boolean) => announcedTitle
+
+const liveRegionAriaHidden = (payload: { announceTitleFlicker: boolean }): boolean => false
+
+const flickerCondition = (payload: { announceTitleEvent?: boolean }) => !!payload.announceTitleEvent
 
 const toastDeps = (title: string, disableAnnounceTitle: boolean, announceTitleEvent: boolean) => [
   title,
@@ -95,4 +98,17 @@ function useToast(timeout: ToastProps['timeout'] = 5e3, deps: any[] = []) {
   return showToast
 }
 
-export { useId, useFlicker, SRFlicker, debug, useToggle, liveRegion, liveRegionContent, toastDeps, useDebug, useToast }
+export {
+  useId,
+  useFlicker,
+  SRFlicker,
+  debug,
+  useToggle,
+  liveRegion,
+  liveRegionContent,
+  toastDeps,
+  useDebug,
+  useToast,
+  flickerCondition,
+  liveRegionAriaHidden,
+}

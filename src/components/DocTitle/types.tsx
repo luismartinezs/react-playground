@@ -29,6 +29,7 @@ export type TDocumentTitleContext = Readonly<{
   useUpdateDocumentTitle: (args: DocumentTitlePayload) => void
   // getters
   useDocumentTitle: () => string
+  useAnnouncedTitle: () => string
   useDisableAnnounceTitle: () => boolean
   useAnnounceTitleEvent: () => boolean
 }>

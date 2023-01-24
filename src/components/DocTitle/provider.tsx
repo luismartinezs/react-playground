@@ -1,14 +1,35 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
+import {
+  BehaviorSubject,
+  map,
+  distinctUntilChanged,
+  debounce,
+  timer,
+  Observable,
+  debounceTime,
+  switchMap,
+  of,
+  merge,
+  tap,
+} from 'rxjs'
 
 import { useId, debug } from './util'
 import type { Context, DocumentEntitlerItem, DocumentTitleOptions, Priority } from './types'
-import { PRIORITY_SORT_MAP, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT } from './constants'
+import {
+  PRIORITY_SORT_MAP,
+  ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT,
+  TITLE_DEBOUNCE_TIME,
+  TITLE_LIVE_REGION_TIMEOUT,
+} from './constants'
 
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
     const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
+
+    const log$ = documentEntitlerItems$.pipe(
+      tap((value) => debug('$$$', 'documentEntitlerItems$', JSON.stringify(value, null, 2)))
+    )
 
     function addEntitler(item: DocumentEntitlerItem) {
       debug('addEntitler', item)
@@ -43,12 +64,33 @@ function useDocumentTitleObservable() {
       return PRIORITY_SORT_MAP[b.priority] <= PRIORITY_SORT_MAP[a.priority] ? -1 : 1
     }
 
+    function emitAfterTimeout<T>(source$: Observable<T>, timeout: number, value: T) {
+      return source$.pipe(
+        debounceTime(timeout),
+        map(() => value)
+      )
+    }
+
     function subscribeToDocumentTitle(callback: (value: string) => void) {
       const documentTitle$ = pipeDocumentEntitlerItems<string>((state) => {
         return state.filter((item) => item.title).sort(sortByPriority)[0]?.title || ''
         // set a debounce time so that page title being announced is less likely to happen while modal is rendering
-      }, 500)
+      }, TITLE_DEBOUNCE_TIME)
       const sub = documentTitle$.subscribe(callback)
+
+      return () => sub.unsubscribe()
+    }
+
+    function subscribeToAnnouncedTitle(callback: (value: string) => void) {
+      log$.subscribe()
+
+      const announcedTitle$ = pipeDocumentEntitlerItems<string>((state) => {
+        return state.filter((item) => item.title && !item.disableAnnounceTitle).sort(sortByPriority)[0]?.title || ''
+      }, TITLE_DEBOUNCE_TIME)
+
+      const sub = merge(announcedTitle$, emitAfterTimeout(announcedTitle$, TITLE_LIVE_REGION_TIMEOUT, ''))
+        .pipe(tap((val) => debug('announcedTitleValue', val)))
+        .subscribe(callback)
 
       return () => sub.unsubscribe()
     }
@@ -121,7 +163,22 @@ function useDocumentTitleObservable() {
         const [title, setTitle] = useState<string>('')
 
         useEffect(() => {
-          return subscribeToDocumentTitle(setTitle)
+          return subscribeToDocumentTitle((newTitle) => {
+            // debug('document title', newTitle)
+            setTitle(newTitle)
+          })
+        }, [])
+
+        return title
+      },
+      useAnnouncedTitle: () => {
+        const [title, setTitle] = useState<string>('')
+
+        useEffect(() => {
+          return subscribeToAnnouncedTitle((newTitle) => {
+            // debug('announced title', newTitle)
+            setTitle(newTitle)
+          })
         }, [])
 
         return title
@@ -158,6 +215,7 @@ const DocumentTitleContext = {
   useAnnounceTitleOnUnmount: developerWarning,
   useUpdateDocumentTitle: developerWarning,
   useDocumentTitle: developerWarning,
+  useAnnouncedTitle: developerWarning,
   useDisableAnnounceTitle: developerWarning,
   useAnnounceTitleEvent: developerWarning,
 }
