@@ -2,11 +2,7 @@ import { memo, ReactNode, useEffect, useState } from 'react'
 
 import Styles from './index.module.scss'
 
-type Props = {
-  children: ReactNode
-}
-
-function SROnly({ children }: Props) {
+function SROnly({ children }: { children: ReactNode }) {
   return <span className={Styles.srOnly}>{children}</span>
 }
 
@@ -18,7 +14,7 @@ type ToastProps = {
   deps?: any[]
 }
 
-function useToast(timeout: ToastProps['timeout'], deps: any[] = []) {
+function useToast(timeout: ToastProps['timeout'] = 5e3, deps: any[] = []) {
   const [showToast, setShowToast] = useState(true)
 
   useEffect(() => {
@@ -36,7 +32,7 @@ function useToast(timeout: ToastProps['timeout'], deps: any[] = []) {
   return showToast
 }
 
-function SROnlyToast({ children, timeout = 5_000, deps = [] }: ToastProps) {
+function SROnlyToast({ children, timeout = 5e3, deps = [] }: ToastProps) {
   const showToast = useToast(timeout)
 
   if (showToast) {

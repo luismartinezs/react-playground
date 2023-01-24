@@ -1,24 +1,12 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import classnames from 'classnames'
 
-import SROnly, { useToast } from '@/components/SROnly'
+import SROnly from '@/components/SROnly'
 
-import { useFlicker, SRFlicker, debug, useToggle } from './util'
+import { useFlicker, SRFlicker, useToggle, liveRegion, liveRegionContent, toastDeps, useToast, useDebug } from './util'
 import { AccessibilityProvider, useA11y } from './provider'
 import type { DocumentTitleOptions, Priority } from './types'
 import { TITLE_LIVE_REGION_TIMEOUT } from './constants'
-
-const useDebug = (args: unknown[], deps: unknown[]) => {
-  useEffect(() => {
-    debug(...args)
-  }, deps)
-}
-
-const liveRegion = (disabledSRAnnounce: boolean) => (disabledSRAnnounce ? 'off' : 'assertive')
-
-const liveRegionContent = (showToast: boolean, title: string) => (!showToast ? '--' : title)
-
-const toastDeps = (title: string, disableSRAnnounce: boolean) => [title, disableSRAnnounce]
 
 function useUpdateDocumentTitle(title: string) {
   useEffect(() => {
@@ -38,13 +26,17 @@ function DocumentTitle() {
   const disableAnnounceTitle = useDisableAnnounceTitle()
   useUpdateDocumentTitle(documentTitle)
   const announceTitleEvent = useAnnounceTitleEvent()
-  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(documentTitle, disableAnnounceTitle))
+  const showToast = useToast(
+    TITLE_LIVE_REGION_TIMEOUT,
+    toastDeps(documentTitle, disableAnnounceTitle, announceTitleEvent)
+  )
 
   useDebug(['Sanity', 'check'], [])
   useDebug(['====> title changed', documentTitle], [documentTitle])
-  useDebug(['====> disabledSRAnnounce changed', disableAnnounceTitle], [disableAnnounceTitle])
+  useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
+  useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
   useDebug(
-    [`<SROnlyToast>${disableAnnounceTitle ? '' : documentTitle}</SROnlyToast>`],
+    [`<SROnlyToast>${liveRegionContent(showToast, documentTitle)}</SROnlyToast>`],
     [documentTitle, disableAnnounceTitle]
   )
 
@@ -157,7 +149,7 @@ function AnnounceDocumentTitleOnUnmount() {
   const { useAnnounceTitleOnUnmount } = useA11y()
   useAnnounceTitleOnUnmount()
 
-  return <DocumentTitleDisablerStatic />
+  return <AnnounceDocumentTitleOnUnmountStatic />
 }
 
 function DocumentEntitler(props: DocumentTitleOptions) {
@@ -298,9 +290,9 @@ function ContextStatus() {
   const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
   const title = useDocumentTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
-  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disableAnnounceTitle))
   const announceTitleEvent = useAnnounceTitleEvent()
   const announceTitleFlicker = useFlicker(announceTitleEvent)
+  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disableAnnounceTitle, announceTitleEvent))
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">

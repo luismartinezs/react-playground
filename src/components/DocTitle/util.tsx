@@ -3,6 +3,14 @@ import { v4 } from 'uuid'
 
 import { DEBUG } from './constants'
 
+type ToastProps = {
+  children: React.ReactNode
+  /** time in ms to keep the DOM connected */
+  timeout?: number
+  /** deps to trigger the timeout */
+  deps?: any[]
+}
+
 function useId(): string {
   return useMemo(() => v4(), [])
 }
@@ -52,4 +60,38 @@ function useToggle(initialState = false) {
   return [state, toggle] as const
 }
 
-export { useId, useFlicker, SRFlicker, debug, useToggle }
+const liveRegion = (disabledSRAnnounce: boolean) => (disabledSRAnnounce ? 'off' : 'assertive')
+
+const liveRegionContent = (showToast: boolean, title: string) => (!showToast ? '--' : title)
+
+const toastDeps = (title: string, disableSRAnnounce: boolean, announceTitleEvent: boolean) => [
+  title,
+  disableSRAnnounce,
+  announceTitleEvent,
+]
+
+const useDebug = (args: unknown[], deps: unknown[]) => {
+  useEffect(() => {
+    debug(...args)
+  }, deps)
+}
+
+function useToast(timeout: ToastProps['timeout'] = 5e3, deps: any[] = []) {
+  const [showToast, setShowToast] = useState(true)
+
+  useEffect(() => {
+    setShowToast(true)
+    const timer = setTimeout(() => {
+      if (timeout && timeout > 0) {
+        setShowToast(false)
+      }
+    }, timeout)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, deps)
+
+  return showToast
+}
+
+export { useId, useFlicker, SRFlicker, debug, useToggle, liveRegion, liveRegionContent, toastDeps, useDebug, useToast }
