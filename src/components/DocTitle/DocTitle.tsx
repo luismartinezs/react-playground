@@ -137,9 +137,25 @@ function DocumentTitleDisablerStatic({ muted = false }: { muted?: boolean }) {
   )
 }
 
+function AnnounceDocumentTitleOnUnmountStatic({ muted = false }: { muted?: boolean }) {
+  return (
+    <Card muted={muted}>
+      <span className="uppercase">Toggler</span>
+      <span>Announce Title on Unmount</span>
+    </Card>
+  )
+}
+
 function DocumentTitleDisabler() {
   const { useAnnounceTitleDisabler } = useA11y()
   useAnnounceTitleDisabler()
+
+  return <DocumentTitleDisablerStatic />
+}
+
+function AnnounceDocumentTitleOnUnmount() {
+  const { useAnnounceTitleOnUnmount } = useA11y()
+  useAnnounceTitleOnUnmount()
 
   return <DocumentTitleDisablerStatic />
 }
@@ -256,6 +272,28 @@ function ToggleableAnnounceTitleDisabler({ initialState }: { initialState?: bool
   )
 }
 
+function ToggleableAnnounceTitleOnUnmount({ initialState }: { initialState?: boolean }) {
+  const [enabled, toggle] = useToggle(initialState)
+
+  return (
+    <div className="relative">
+      <button
+        className={classnames(
+          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
+          enabled ? 'bg-green-400' : 'bg-red-400'
+        )}
+        onClick={() => {
+          console.log('toggle')
+          toggle()
+        }}
+      >
+        {enabled ? 'ON' : 'OFF'}
+      </button>
+      {enabled ? <AnnounceDocumentTitleOnUnmount /> : <AnnounceDocumentTitleOnUnmountStatic muted={true} />}
+    </div>
+  )
+}
+
 function ContextStatus() {
   const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
   const title = useDocumentTitle()
@@ -307,6 +345,7 @@ const DocTitle: FC = (): JSX.Element => {
         />
         <ToggleableUpdateDocumentTitle title="Updated title" priority="modal" initialState={false} />
         <ToggleableAnnounceTitleDisabler initialState={false} />
+        <ToggleableAnnounceTitleOnUnmount initialState={false} />
       </div>
     </AccessibilityProvider>
   )

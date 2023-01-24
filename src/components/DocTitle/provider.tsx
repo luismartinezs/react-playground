@@ -103,7 +103,9 @@ function useDocumentTitleObservable() {
         }, [priority])
       },
       useAnnounceTitleOnUnmount: () => {
-        //
+        useEffect(() => {
+          return addDisableAnnounceTitle
+        })
       },
       useUpdateDocumentTitle: ({ priority = 'page', title = '' }: Partial<DocumentTitleOptions>) => {
         const id = useId()
