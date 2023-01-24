@@ -77,17 +77,17 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
       )}
     >
       <span className="uppercase">Entitler</span>
-      <span>
+      <span className="whitespace-nowrap">
         Title: <span className="font-bold">{props.title || '--'}</span>
       </span>
-      <span>
+      <span className="whitespace-nowrap">
         Priority: <span className="font-bold">{props.priority || 'page'}</span>
       </span>
-      <span>
-        DisableSR: <span className="font-bold">{props.disableAnnounceTitle ? 'true' : 'false'}</span>
+      <span className="whitespace-nowrap">
+        Disable SR: <span className="font-bold">{props.disableAnnounceTitle ? 'true' : 'false'}</span>
       </span>
-      <span>
-        SR Flicker: <span className="font-bold">{props.announceTitleOnUnmount ? 'true' : 'false'}</span>
+      <span className="whitespace-nowrap">
+        @unmount: <span className="font-bold">{props.announceTitleOnUnmount ? 'true' : 'false'}</span>
       </span>
     </div>
   )
@@ -168,7 +168,7 @@ const DocTitle: FC = (): JSX.Element => {
       <p>Live region content SR visibility can be "flickered" to force the SR to read the contents</p>
       <AccessibleDocumentTitle />
       <ContextStatus />
-      <div className="flex">
+      <div className="flex flex-wrap">
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
         <ToggleableDocumentEntitler title="Second title" priority="modal" disableAnnounceTitle initialState={false} />
         <ToggleableDocumentEntitler title="" priority="modal" disableAnnounceTitle initialState={false} />
