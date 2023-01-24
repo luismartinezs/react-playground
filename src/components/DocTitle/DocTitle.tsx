@@ -5,8 +5,8 @@ import SROnly, { useToast } from '@/components/SROnly'
 
 import { useFlicker, SRFlicker, debug } from './util'
 import { AccessibilityProvider, useA11y } from './provider'
-import type { DocumentTitleOptions, WithSrFlicker } from './types'
-import { DEBUG, TITLE_LIVE_REGION_TIMEOUT } from './constants'
+import type { DocumentTitleOptions } from './types'
+import { TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
 const useDebug = (args: unknown[], deps: unknown[]) => {
   useEffect(() => {
@@ -33,39 +33,42 @@ function useUpdateDocumentTitle(title: string) {
 }
 
 function DocumentTitle() {
-  const { useDocumentTitle, useDisableSRAnnounce, useSRFlicker } = useA11y()
-  const title = useDocumentTitle()
-  const disabledSRAnnounce = useDisableSRAnnounce()
-  useUpdateDocumentTitle(title)
-  const srFlicker = useSRFlicker()
-  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disabledSRAnnounce))
+  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
+  const documentTitle = useDocumentTitle()
+  const disableAnnounceTitle = useDisableAnnounceTitle()
+  useUpdateDocumentTitle(documentTitle)
+  const announceTitleEvent = useAnnounceTitleEvent()
+  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(documentTitle, disableAnnounceTitle))
 
   useDebug(['Sanity', 'check'], [])
-  useDebug(['====> title changed', title], [title])
-  useDebug(['====> disabledSRAnnounce changed', disabledSRAnnounce], [disabledSRAnnounce])
-  useDebug([`<SROnlyToast>${disabledSRAnnounce ? '' : title}</SROnlyToast>`], [title, disabledSRAnnounce])
+  useDebug(['====> title changed', documentTitle], [documentTitle])
+  useDebug(['====> disabledSRAnnounce changed', disableAnnounceTitle], [disableAnnounceTitle])
+  useDebug(
+    [`<SROnlyToast>${disableAnnounceTitle ? '' : documentTitle}</SROnlyToast>`],
+    [documentTitle, disableAnnounceTitle]
+  )
 
   return (
     <SROnly>
-      <SRFlicker condition={srFlicker}>{liveRegionContent(showToast, title)}</SRFlicker>
+      <SRFlicker condition={announceTitleEvent}>{liveRegionContent(showToast, documentTitle)}</SRFlicker>
     </SROnly>
   )
 }
 
 function AccessibleDocumentTitle() {
-  const { useDisableSRAnnounce } = useA11y()
-  const disabledSRAnnounce = useDisableSRAnnounce()
+  const { useDisableAnnounceTitle } = useA11y()
+  const disableAnnounceTitle = useDisableAnnounceTitle()
 
-  useDebug([`aria-live=${disabledSRAnnounce ? 'off' : 'assertive'}`], [disabledSRAnnounce])
+  useDebug([`aria-live=${disableAnnounceTitle ? 'off' : 'assertive'}`], [disableAnnounceTitle])
 
   return (
-    <span aria-live={liveRegion(disabledSRAnnounce)}>
+    <span aria-live={liveRegion(disableAnnounceTitle)}>
       <DocumentTitle />
     </span>
   )
 }
 
-function DocTitleCard(props: WithSrFlicker<DocumentTitleOptions> & { muted?: boolean }) {
+function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
   return (
     <div
       className={classnames(
@@ -81,31 +84,31 @@ function DocTitleCard(props: WithSrFlicker<DocumentTitleOptions> & { muted?: boo
         Priority: <span className="font-bold">{props.priority || 'page'}</span>
       </span>
       <span>
-        DisableSR: <span className="font-bold">{props.disableSRAnnounce ? 'true' : 'false'}</span>
+        DisableSR: <span className="font-bold">{props.disableAnnounceTitle ? 'true' : 'false'}</span>
       </span>
       <span>
-        SR Flicker: <span className="font-bold">{props.srFlicker ? 'true' : 'false'}</span>
+        SR Flicker: <span className="font-bold">{props.announceTitleOnUnmount ? 'true' : 'false'}</span>
       </span>
     </div>
   )
 }
 
-function DocumentEntitler(props: WithSrFlicker<DocumentTitleOptions>) {
+function DocumentEntitler(props: DocumentTitleOptions) {
   useA11y().useDocumentEntitler({
     priority: props.priority || 'page',
     title: props.title,
-    disableSRAnnounce: props.disableSRAnnounce,
-    srFlicker: props.srFlicker,
+    disableAnnounceTitle: props.disableAnnounceTitle,
+    announceTitleOnUnmount: props.announceTitleOnUnmount,
   })
 
   return <DocTitleCard {...props} />
 }
 
-function DocumentEntitlerSkeleton(props: WithSrFlicker<DocumentTitleOptions>) {
+function DocumentEntitlerSkeleton(props: DocumentTitleOptions) {
   return <DocTitleCard {...props} muted />
 }
 
-function ToggleableDocumentEntitler(props: WithSrFlicker<DocumentTitleOptions> & { initialState?: boolean }) {
+function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState?: boolean }) {
   const [enabled, setEnabled] = useState<boolean>(props.initialState === undefined ? true : props.initialState)
 
   return (
@@ -128,12 +131,12 @@ function ToggleableDocumentEntitler(props: WithSrFlicker<DocumentTitleOptions> &
 }
 
 function ContextStatus() {
-  const { useDocumentTitle, useDisableSRAnnounce, useSRFlicker } = useA11y()
+  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent } = useA11y()
   const title = useDocumentTitle()
-  const disabledSRAnnounce = useDisableSRAnnounce()
-  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disabledSRAnnounce))
-  const srFlicker = useSRFlicker()
-  const flicker = useFlicker(srFlicker)
+  const disableAnnounceTitle = useDisableAnnounceTitle()
+  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disableAnnounceTitle))
+  const announceTitleEvent = useAnnounceTitleEvent()
+  const announceTitleFlicker = useFlicker(announceTitleEvent)
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
@@ -142,10 +145,10 @@ function ContextStatus() {
         Document Title: <span className="font-bold">{title}</span>
       </span>
       <span>
-        Live region aria-live: <span className="font-bold">{liveRegion(disabledSRAnnounce)}</span>
+        Live region aria-live: <span className="font-bold">{liveRegion(disableAnnounceTitle)}</span>
       </span>
       <span>
-        Live region aria-hidden: <span className="font-bold">{flicker ? 'true' : 'false'}</span>
+        Live region aria-hidden: <span className="font-bold">{announceTitleFlicker ? 'true' : 'false'}</span>
       </span>
       <span>
         Live region content: <span className="font-bold">{liveRegionContent(showToast, title)}</span>
@@ -167,9 +170,15 @@ const DocTitle: FC = (): JSX.Element => {
       <ContextStatus />
       <div className="flex">
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
-        <ToggleableDocumentEntitler title="Second title" priority="modal" disableSRAnnounce initialState={false} />
-        <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce initialState={false} />
-        <ToggleableDocumentEntitler title="" priority="modal" disableSRAnnounce srFlicker initialState={false} />
+        <ToggleableDocumentEntitler title="Second title" priority="modal" disableAnnounceTitle initialState={false} />
+        <ToggleableDocumentEntitler title="" priority="modal" disableAnnounceTitle initialState={false} />
+        <ToggleableDocumentEntitler
+          title=""
+          priority="modal"
+          disableAnnounceTitle
+          announceTitleOnUnmount
+          initialState={false}
+        />
       </div>
     </AccessibilityProvider>
   )

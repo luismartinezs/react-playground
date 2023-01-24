@@ -2,19 +2,35 @@ import { PRIORITY_SORT_MAP } from './constants'
 
 export type Priority = keyof typeof PRIORITY_SORT_MAP
 
-export type DocumentTitleOptions = { priority?: Priority; title?: string; disableSRAnnounce?: boolean }
+export type DocumentTitlePayload = {
+  priority?: Priority
+  title?: string
+}
 
-export type DocumentEntitlerItem = Required<DocumentTitleOptions> & {
+export type DocumentTitleOptions = {
+  priority?: Priority
+  title?: string
+  disableAnnounceTitle?: boolean
+  announceTitleOnUnmount?: boolean
+}
+
+export type DocumentEntitlerItem = {
+  priority: Priority
+  title: string
+  disableAnnounceTitle: boolean
   id: string
 }
 
-export type WithSrFlicker<T> = T & { srFlicker?: boolean }
-
 export type TDocumentTitleContext = Readonly<{
-  useDocumentEntitler: (args: WithSrFlicker<DocumentTitleOptions>) => void
+  // setters
+  useDocumentEntitler: (args: DocumentTitleOptions) => void
+  useAnnounceTitleDisabler: () => void
+  useAnnounceTitleOnUnmount: () => void
+  useUpdateDocumentTitle: (args: DocumentTitlePayload) => void
+  // getters
   useDocumentTitle: () => string
-  useDisableSRAnnounce: () => boolean
-  useSRFlicker: () => boolean
+  useDisableAnnounceTitle: () => boolean
+  useAnnounceTitleEvent: () => boolean
 }>
 
 export type Context = Readonly<TDocumentTitleContext>

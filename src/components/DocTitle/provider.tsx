@@ -2,13 +2,13 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { BehaviorSubject, map, distinctUntilChanged, debounce, timer, Observable } from 'rxjs'
 
 import { useId, debug } from './util'
-import type { Context, DocumentEntitlerItem, DocumentTitleOptions, WithSrFlicker } from './types'
-import { PRIORITY_SORT_MAP } from './constants'
+import type { Context, DocumentEntitlerItem, DocumentTitleOptions } from './types'
+import { PRIORITY_SORT_MAP, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT } from './constants'
 
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
-    const srFlicker$ = new BehaviorSubject<boolean>(false)
+    const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
 
     function addEntitler(item: DocumentEntitlerItem) {
       debug('addEntitler', item)
@@ -20,12 +20,12 @@ function useDocumentTitleObservable() {
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
     }
 
-    function addSRFlicker() {
-      debug('addSRFlicker')
-      srFlicker$.next(true)
+    function addDisableAnnounceTitle() {
+      debug('addDisableAnnounceTitle')
+      announceTitleOnUnmount$.next(true)
       setTimeout(() => {
-        srFlicker$.next(false)
-      }, 500)
+        announceTitleOnUnmount$.next(false)
+      }, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT)
     }
 
     function pipeDocumentEntitlerItems<Value>(
@@ -53,10 +53,10 @@ function useDocumentTitleObservable() {
       return () => sub.unsubscribe()
     }
 
-    function subscribeToDisableSRAnnounce(callback: (value: boolean) => void) {
+    function subscribeToDisableAnnounceTitle(callback: (value: boolean) => void) {
       const disableSRAnnounce$ = pipeDocumentEntitlerItems<boolean>((state) => {
         // alternatively check whether any entitler set disableSRAnnounce to true, but either way should work with our main use case (modal with higher priority disabling SR announce)
-        return Boolean(state.sort(sortByPriority)[0]?.disableSRAnnounce)
+        return Boolean(state.sort(sortByPriority)[0]?.disableAnnounceTitle)
       }, 0)
       // debounce time to 0 so that the SR announce is disabled before any title change happens, so page title gets announced after a modal closes (context change)
       const sub = disableSRAnnounce$.subscribe(callback)
@@ -64,8 +64,8 @@ function useDocumentTitleObservable() {
       return () => sub.unsubscribe()
     }
 
-    function subscribeToSRFlicker(callback: (value: boolean) => void) {
-      const sub = srFlicker$.subscribe(callback)
+    function subscribeToAnnounceTitleEvent(callback: (value: boolean) => void) {
+      const sub = announceTitleOnUnmount$.subscribe(callback)
 
       return () => sub.unsubscribe()
     }
@@ -75,20 +75,29 @@ function useDocumentTitleObservable() {
         // by default set to the lowest priority
         priority = 'page',
         title = '',
-        disableSRAnnounce = false,
-        srFlicker = false,
-      }: WithSrFlicker<DocumentTitleOptions>) => {
+        disableAnnounceTitle = false,
+        announceTitleOnUnmount = false,
+      }: Partial<DocumentTitleOptions>) => {
         const id = useId()
 
         useEffect(() => {
-          addEntitler({ id, priority, title, disableSRAnnounce })
+          addEntitler({ id, priority, title, disableAnnounceTitle })
           return () => {
-            if (srFlicker) {
-              addSRFlicker()
+            if (announceTitleOnUnmount) {
+              addDisableAnnounceTitle()
             }
             removeEntitler(id)
           }
         }, [priority, title])
+      },
+      useAnnounceTitleDisabler: () => {
+        //
+      },
+      useAnnounceTitleOnUnmount: () => {
+        //
+      },
+      useUpdateDocumentTitle: () => {
+        //
       },
       useDocumentTitle: () => {
         const [title, setTitle] = useState<string>('')
@@ -99,23 +108,23 @@ function useDocumentTitleObservable() {
 
         return title
       },
-      useDisableSRAnnounce: () => {
-        const [disableSRAnnounce, setDisableSRAnnounce] = useState<boolean>(false)
+      useDisableAnnounceTitle: () => {
+        const [disableAnnounceTitle, setDisableAnnounceTitle] = useState<boolean>(false)
 
         useEffect(() => {
-          return subscribeToDisableSRAnnounce(setDisableSRAnnounce)
+          return subscribeToDisableAnnounceTitle(setDisableAnnounceTitle)
         }, [])
 
-        return disableSRAnnounce
+        return disableAnnounceTitle
       },
-      useSRFlicker: () => {
-        const [srFlicker, setSRFlicker] = useState<boolean>(false)
+      useAnnounceTitleEvent: () => {
+        const [announceTitleEvent, setAnnounceTitleEvent] = useState<boolean>(false)
 
         useEffect(() => {
-          return subscribeToSRFlicker(setSRFlicker)
+          return subscribeToAnnounceTitleEvent(setAnnounceTitleEvent)
         }, [])
 
-        return srFlicker
+        return announceTitleEvent
       },
     }
   }, [])
@@ -127,9 +136,12 @@ function developerWarning(): never {
 
 const DocumentTitleContext = {
   useDocumentEntitler: developerWarning,
+  useAnnounceTitleDisabler: developerWarning,
+  useAnnounceTitleOnUnmount: developerWarning,
+  useUpdateDocumentTitle: developerWarning,
   useDocumentTitle: developerWarning,
-  useDisableSRAnnounce: developerWarning,
-  useSRFlicker: developerWarning,
+  useDisableAnnounceTitle: developerWarning,
+  useAnnounceTitleEvent: developerWarning,
 }
 
 const AccessibilityContext = createContext<Context>({
