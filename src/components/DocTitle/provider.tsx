@@ -27,9 +27,7 @@ function useDocumentTitleObservable() {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
     const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
 
-    const log$ = documentEntitlerItems$.pipe(
-      tap((value) => debug('$$$', 'documentEntitlerItems$', JSON.stringify(value, null, 2)))
-    )
+    const log$ = documentEntitlerItems$.pipe(tap((value) => debug('$$$', 'documentEntitlerItems$', value)))
 
     function addEntitler(item: DocumentEntitlerItem) {
       debug('addEntitler', item)
@@ -85,7 +83,12 @@ function useDocumentTitleObservable() {
       log$.subscribe()
 
       const announcedTitle$ = pipeDocumentEntitlerItems<string>((state) => {
-        return state.filter((item) => item.title && !item.disableAnnounceTitle).sort(sortByPriority)[0]?.title || ''
+        const top = state.filter((item) => item.title).sort(sortByPriority)[0]
+        debug('top', top)
+        if (top?.disableAnnounceTitle) {
+          return ''
+        }
+        return top?.title || ''
       }, TITLE_DEBOUNCE_TIME)
 
       const sub = merge(announcedTitle$, emitAfterTimeout(announcedTitle$, TITLE_LIVE_REGION_TIMEOUT, ''))
