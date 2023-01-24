@@ -36,13 +36,15 @@ function DocumentTitle() {
   useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
   useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
   useDebug(
-    [`<SROnlyToast>${liveRegionContent(showToast, documentTitle)}</SROnlyToast>`],
+    [`<SROnlyToast>${liveRegionContent(showToast, documentTitle, disableAnnounceTitle)}</SROnlyToast>`],
     [documentTitle, disableAnnounceTitle]
   )
 
   return (
     <SROnly>
-      <SRFlicker condition={announceTitleEvent}>{liveRegionContent(showToast, documentTitle)}</SRFlicker>
+      <SRFlicker condition={announceTitleEvent}>
+        {liveRegionContent(showToast, documentTitle, disableAnnounceTitle)}
+      </SRFlicker>
     </SROnly>
   )
 }
@@ -307,7 +309,8 @@ function ContextStatus() {
         Live region aria-hidden: <span className="font-bold">{announceTitleFlicker ? 'true' : 'false'}</span>
       </span>
       <span>
-        Live region content: <span className="font-bold">{liveRegionContent(showToast, title)}</span>
+        Live region content:{' '}
+        <span className="font-bold">{liveRegionContent(showToast, title, disableAnnounceTitle)}</span>
       </span>
     </div>
   )

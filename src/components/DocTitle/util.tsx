@@ -60,13 +60,14 @@ function useToggle(initialState = false) {
   return [state, toggle] as const
 }
 
-const liveRegion = (disabledSRAnnounce: boolean) => (disabledSRAnnounce ? 'off' : 'assertive')
+const liveRegion = (disableAnnounceTitle: boolean) => (disableAnnounceTitle ? 'off' : 'assertive')
 
-const liveRegionContent = (showToast: boolean, title: string) => (!showToast ? '--' : title)
+const liveRegionContent = (showToast: boolean, title: string, disableAnnounceTitle: boolean) =>
+  !showToast || disableAnnounceTitle ? '--' : title
 
-const toastDeps = (title: string, disableSRAnnounce: boolean, announceTitleEvent: boolean) => [
+const toastDeps = (title: string, disableAnnounceTitle: boolean, announceTitleEvent: boolean) => [
   title,
-  disableSRAnnounce,
+  disableAnnounceTitle,
   announceTitleEvent,
 ]
 
