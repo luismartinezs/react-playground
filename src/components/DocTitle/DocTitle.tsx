@@ -60,7 +60,7 @@ function DocumentTitle() {
   // useDebug(['Sanity', 'check'], [])
   // useDebug(['====> title changed', documentTitle], [documentTitle])
   // useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
-  // useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
+  useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
   // useDebug(
   //   [`<SROnlyToast>${liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}</SROnlyToast>`],
   //   [announcedTitle, disableAnnounceTitle]
@@ -68,9 +68,9 @@ function DocumentTitle() {
 
   return (
     <SROnly>
-      <SRFlicker condition={flickerCondition({ announceTitleEvent })} timeout={ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT}>
-        {liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}
-      </SRFlicker>
+      {/* <SRFlicker condition={flickerCondition({ announceTitleEvent })} timeout={ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT}> */}
+      {liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}
+      {/* </SRFlicker> */}
     </SROnly>
   )
 }
@@ -296,7 +296,7 @@ function ContextStatus() {
   const announcedTitle = useAnnouncedTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
   const announceTitleEvent = useAnnounceTitleEvent()
-  const announceTitleFlicker = useFlicker(announceTitleEvent)
+  // const announceTitleFlicker = useFlicker(announceTitleEvent)
   const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disableAnnounceTitle, announceTitleEvent))
 
   return (
@@ -335,16 +335,16 @@ const DocTitle: FC = (): JSX.Element => {
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
         <ToggleableDocumentEntitler title="Second title" priority="modal" disableAnnounceTitle initialState={false} />
         <ToggleableDocumentEntitler title="" priority="modal" disableAnnounceTitle initialState={false} />
-        <ToggleableDocumentEntitler
+        {/* <ToggleableDocumentEntitler
           title=""
           priority="modal"
           disableAnnounceTitle
           announceTitleOnUnmount
           initialState={false}
-        />
+        /> */}
         <ToggleableUpdateDocumentTitle title="Updated title" priority="modal" initialState={false} />
         <ToggleableAnnounceTitleDisabler initialState={false} />
-        <ToggleableAnnounceTitleOnUnmount initialState={false} />
+        {/* <ToggleableAnnounceTitleOnUnmount initialState={false} /> */}
       </div>
     </AccessibilityProvider>
   )

@@ -18,6 +18,8 @@ function useId(): string {
 function useFlicker(condition: boolean, timeout = 250) {
   const [flicker, setFlicker] = useState(false)
 
+  // debug('flicker', flicker)
+
   useEffect(() => {
     if (condition) {
       setFlicker(true)
@@ -66,7 +68,7 @@ const liveRegionContent = (showToast: boolean, announcedTitle: string, disableAn
 
 const liveRegionAriaHidden = (payload: { announceTitleFlicker: boolean }): boolean => false
 
-const flickerCondition = (payload: { announceTitleEvent?: boolean }) => !!payload.announceTitleEvent
+const flickerCondition = (payload: { announceTitleEvent?: boolean }) => false // !!payload.announceTitleEvent
 
 const toastDeps = (title: string, disableAnnounceTitle: boolean, announceTitleEvent: boolean) => [
   title,
