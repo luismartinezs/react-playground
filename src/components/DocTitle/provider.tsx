@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
   BehaviorSubject,
   map,
@@ -7,27 +7,95 @@ import {
   timer,
   Observable,
   debounceTime,
-  switchMap,
-  of,
   merge,
   tap,
+  distinctUntilKeyChanged,
 } from 'rxjs'
 
-import { useId, debug } from './util'
+import { debug, useId } from './util'
 import type { Context, DocumentEntitlerItem, DocumentTitleOptions, Priority } from './types'
-import {
-  PRIORITY_SORT_MAP,
-  ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT,
-  TITLE_DEBOUNCE_TIME,
-  TITLE_LIVE_REGION_TIMEOUT,
-} from './constants'
+import { PRIORITY_SORT_MAP, TITLE_DEBOUNCE_TIME, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
-    // const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
+    const announcedIds = new Set()
+    const announcedTitle$ = documentEntitlerItems$.pipe(
+      map((state) => {
+        // debug('subscribeToAnnouncedTitle', state)
+        return state.sort(sortByPriority)[0] || { id: 'null' }
+      }),
+      tap((item) => debug('item', item)),
+      distinctUntilKeyChanged('id'),
+      debounce(() => timer(TITLE_DEBOUNCE_TIME)),
+      tap((item) => {
+        debug('debouncedAnnouncedTitleItem$.pipe', item)
+        debug('--- announcedIds', announcedIds)
+      }),
+      map((item) => {
+        if (!item) {
+          return ''
+        }
+        // if title announce is disabled, then we do not announce it
+        if (item.disableAnnounceTitle) {
+          if (item.title) {
+            // case where announce title is disabled, but context changes, when context changes, we clear all announced ids
+            clearAnnouncedIds()
+          }
+          return ''
+        }
+        // context = some document title was set, that defines one context. If doc title was not set, then the context is the same
+        // e.g.
+        // if modal did not set doc title, that means it didn't change whatever the context was, so we do not reset it, that also means the current item does not set any context and thus it is not necessary to add it to the context
+        if (!item.title) {
+          return ''
+        }
+        // if modal (or something else) set doc title, that defines a new context
+        // it's possible that the previous item did not set any context, so we need to check whether this new item was already announced or not
 
-    const log$ = documentEntitlerItems$.pipe(tap((value) => debug('$$$', 'documentEntitlerItems$', value)))
+        // if it was not announced, then we announce it
+        if (!wasIdAnnounced(item.id)) {
+          clearAnnouncedIds() // clear context
+          addAnnouncedId(item.id) // add the announced title to new context
+          // FIX this part doesn't work if the pipeline runs multiple times with the same, e.g. component rerender
+          return item.title
+        } else {
+          // if it was already announced, then we do not announce it, it's as if nothing happened
+          return ''
+        }
+      }),
+      tap((val) => {
+        debug('announced title', val)
+        debug('===============')
+      })
+    )
+
+    const announcedTitleWithTimeout$ = merge(
+      announcedTitle$,
+      emitAfterTimeout(announcedTitle$, TITLE_LIVE_REGION_TIMEOUT, '')
+    )
+
+    function addAnnouncedId(id: string) {
+      if (id) {
+        announcedIds.add(id)
+      }
+    }
+
+    function removeAnnouncedId(id: string) {
+      if (id) {
+        announcedIds.delete(id)
+      }
+    }
+
+    function wasIdAnnounced(id: string) {
+      if (id) {
+        return announcedIds.has(id)
+      }
+    }
+
+    function clearAnnouncedIds() {
+      announcedIds.clear()
+    }
 
     function addEntitler(item: DocumentEntitlerItem) {
       debug('addEntitler', item)
@@ -35,25 +103,18 @@ function useDocumentTitleObservable() {
     }
 
     function removeEntitler(id: string) {
-      debug('removeEntitler')
+      removeAnnouncedId(id)
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
     }
 
-    // function addDisableAnnounceTitle() {
-    //   debug('addDisableAnnounceTitle')
-    //   announceTitleOnUnmount$.next(true)
-    //   setTimeout(() => {
-    //     announceTitleOnUnmount$.next(false)
-    //   }, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT)
-    // }
-
     function pipeDocumentEntitlerItems<Value>(
       mappingFn: (items: DocumentEntitlerItem[]) => Value,
-      debounceTime: number
+      debounceTime: number,
+      comparator: (previous: Value, current: Value) => boolean = (previous, current) => previous === current
     ): Observable<Value> {
       return documentEntitlerItems$.pipe(
         map(mappingFn),
-        distinctUntilChanged(),
+        distinctUntilChanged(comparator),
         debounce(() => timer(debounceTime))
       )
     }
@@ -72,7 +133,7 @@ function useDocumentTitleObservable() {
     function subscribeToDocumentTitle(callback: (value: string) => void) {
       const documentTitle$ = pipeDocumentEntitlerItems<string>((state) => {
         return state.filter((item) => item.title).sort(sortByPriority)[0]?.title || ''
-        // set a debounce time so that page title being announced is less likely to happen while modal is rendering
+        // set a debounce time to ignore multiple titles in quick succession
       }, TITLE_DEBOUNCE_TIME)
       const sub = documentTitle$.subscribe(callback)
 
@@ -80,40 +141,19 @@ function useDocumentTitleObservable() {
     }
 
     function subscribeToAnnouncedTitle(callback: (value: string) => void) {
-      log$.subscribe()
-
-      const announcedTitle$ = pipeDocumentEntitlerItems<string>((state) => {
-        const top = state.filter((item) => item.title).sort(sortByPriority)[0]
-        debug('top', top)
-        if (top?.disableAnnounceTitle) {
-          return ''
-        }
-        return top?.title || ''
-      }, TITLE_DEBOUNCE_TIME)
-
-      const sub = merge(announcedTitle$, emitAfterTimeout(announcedTitle$, TITLE_LIVE_REGION_TIMEOUT, ''))
-        .pipe(tap((val) => debug('announcedTitleValue', val)))
-        .subscribe(callback)
+      const sub = announcedTitleWithTimeout$.subscribe(callback)
 
       return () => sub.unsubscribe()
     }
 
     function subscribeToDisableAnnounceTitle(callback: (value: boolean) => void) {
       const disableSRAnnounce$ = pipeDocumentEntitlerItems<boolean>((state) => {
-        // alternatively check whether any entitler set disableSRAnnounce to true, but either way should work with our main use case (modal with higher priority disabling SR announce)
         return Boolean(state.sort(sortByPriority)[0]?.disableAnnounceTitle)
       }, 0)
-      // debounce time to 0 so that the SR announce is disabled before any title change happens, so page title gets announced after a modal closes (context change)
       const sub = disableSRAnnounce$.subscribe(callback)
 
       return () => sub.unsubscribe()
     }
-
-    // function subscribeToAnnounceTitleEvent(callback: (value: boolean) => void) {
-    //   const sub = announceTitleOnUnmount$.subscribe(callback)
-
-    //   return () => sub.unsubscribe()
-    // }
 
     return {
       useDocumentEntitler: ({
@@ -121,16 +161,12 @@ function useDocumentTitleObservable() {
         priority = 'page',
         title = '',
         disableAnnounceTitle = false,
-      }: // announceTitleOnUnmount = false,
-      Partial<DocumentTitleOptions>) => {
+      }: Partial<DocumentTitleOptions>) => {
         const id = useId()
 
         useEffect(() => {
           addEntitler({ id, priority, title, disableAnnounceTitle })
           return () => {
-            // if (announceTitleOnUnmount) {
-            //   addDisableAnnounceTitle()
-            // }
             removeEntitler(id)
           }
         }, [priority, title])
@@ -147,16 +183,11 @@ function useDocumentTitleObservable() {
           return () => removeEntitler(id)
         }, [priority])
       },
-      // useAnnounceTitleOnUnmount: () => {
-      // useEffect(() => {
-      //   return addDisableAnnounceTitle
-      // })
-      // },
       useUpdateDocumentTitle: ({ priority = 'page', title = '' }: Partial<DocumentTitleOptions>) => {
         const id = useId()
 
         useEffect(() => {
-          addEntitler({ id, priority, title, disableAnnounceTitle: false })
+          addEntitler({ id, priority, title, disableAnnounceTitle: true })
           return () => {
             removeEntitler(id)
           }
@@ -167,7 +198,6 @@ function useDocumentTitleObservable() {
 
         useEffect(() => {
           return subscribeToDocumentTitle((newTitle) => {
-            // debug('document title', newTitle)
             setTitle(newTitle)
           })
         }, [])
@@ -179,7 +209,7 @@ function useDocumentTitleObservable() {
 
         useEffect(() => {
           return subscribeToAnnouncedTitle((newTitle) => {
-            // debug('announced title', newTitle)
+            // debug('useAnnouncedTitle', newTitle)
             setTitle(newTitle)
           })
         }, [])
@@ -195,15 +225,6 @@ function useDocumentTitleObservable() {
 
         return disableAnnounceTitle
       },
-      // useAnnounceTitleEvent: () => {
-      //   const [announceTitleEvent, setAnnounceTitleEvent] = useState<boolean>(false)
-
-      //   useEffect(() => {
-      //     return subscribeToAnnounceTitleEvent(setAnnounceTitleEvent)
-      //   }, [])
-
-      //   return announceTitleEvent
-      // },
     }
   }, [])
 }
@@ -215,12 +236,10 @@ function developerWarning(): never {
 const DocumentTitleContext = {
   useDocumentEntitler: developerWarning,
   useAnnounceTitleDisabler: developerWarning,
-  // useAnnounceTitleOnUnmount: developerWarning,
   useUpdateDocumentTitle: developerWarning,
   useDocumentTitle: developerWarning,
   useAnnouncedTitle: developerWarning,
   useDisableAnnounceTitle: developerWarning,
-  // useAnnounceTitleEvent: developerWarning,
 }
 
 const AccessibilityContext = createContext<Context>({
