@@ -25,7 +25,7 @@ export type TDocumentTitleContext = Readonly<{
   // setters
   useDocumentEntitler: (args: DocumentTitleOptions) => void
   useAnnounceTitleDisabler: () => void
-  useAnnounceTitleOnUnmount: () => void
+  // useAnnounceTitleOnUnmount: () => void
   useUpdateDocumentTitle: (args: DocumentTitlePayload) => void
   // getters
   useDocumentTitle: () => string

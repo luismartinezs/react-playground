@@ -122,8 +122,8 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
 }
 
 function AnnounceTitleOnUnmount() {
-  const { useAnnounceTitleOnUnmount } = useA11y()
-  useAnnounceTitleOnUnmount()
+  // const { useAnnounceTitleOnUnmount } = useA11y()
+  // useAnnounceTitleOnUnmount()
 
   return (
     <Card>
@@ -174,8 +174,8 @@ function DocumentTitleDisabler() {
 }
 
 function AnnounceDocumentTitleOnUnmount() {
-  const { useAnnounceTitleOnUnmount } = useA11y()
-  useAnnounceTitleOnUnmount()
+  // const { useAnnounceTitleOnUnmount } = useA11y()
+  // useAnnounceTitleOnUnmount()
 
   return <AnnounceDocumentTitleOnUnmountStatic />
 }
@@ -334,6 +334,7 @@ const DocTitle: FC = (): JSX.Element => {
       <div className="flex flex-wrap">
         <ToggleableDocumentEntitler title="First title" priority="page" initialState={true} />
         <ToggleableDocumentEntitler title="Second title" priority="modal" disableAnnounceTitle initialState={false} />
+        <ToggleableDocumentEntitler title="Third title" priority="modal" initialState={false} />
         <ToggleableDocumentEntitler title="" priority="modal" disableAnnounceTitle initialState={false} />
         {/* <ToggleableDocumentEntitler
           title=""

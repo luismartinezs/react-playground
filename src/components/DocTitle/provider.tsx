@@ -147,11 +147,11 @@ function useDocumentTitleObservable() {
           return () => removeEntitler(id)
         }, [priority])
       },
-      useAnnounceTitleOnUnmount: () => {
-        // useEffect(() => {
-        //   return addDisableAnnounceTitle
-        // })
-      },
+      // useAnnounceTitleOnUnmount: () => {
+      // useEffect(() => {
+      //   return addDisableAnnounceTitle
+      // })
+      // },
       useUpdateDocumentTitle: ({ priority = 'page', title = '' }: Partial<DocumentTitleOptions>) => {
         const id = useId()
 
