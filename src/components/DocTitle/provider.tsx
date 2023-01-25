@@ -25,7 +25,7 @@ import {
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
-    const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
+    // const announceTitleOnUnmount$ = new BehaviorSubject<boolean>(false)
 
     const log$ = documentEntitlerItems$.pipe(tap((value) => debug('$$$', 'documentEntitlerItems$', value)))
 
@@ -109,11 +109,11 @@ function useDocumentTitleObservable() {
       return () => sub.unsubscribe()
     }
 
-    function subscribeToAnnounceTitleEvent(callback: (value: boolean) => void) {
-      const sub = announceTitleOnUnmount$.subscribe(callback)
+    // function subscribeToAnnounceTitleEvent(callback: (value: boolean) => void) {
+    //   const sub = announceTitleOnUnmount$.subscribe(callback)
 
-      return () => sub.unsubscribe()
-    }
+    //   return () => sub.unsubscribe()
+    // }
 
     return {
       useDocumentEntitler: ({
@@ -121,8 +121,8 @@ function useDocumentTitleObservable() {
         priority = 'page',
         title = '',
         disableAnnounceTitle = false,
-        announceTitleOnUnmount = false,
-      }: Partial<DocumentTitleOptions>) => {
+      }: // announceTitleOnUnmount = false,
+      Partial<DocumentTitleOptions>) => {
         const id = useId()
 
         useEffect(() => {
@@ -195,15 +195,15 @@ function useDocumentTitleObservable() {
 
         return disableAnnounceTitle
       },
-      useAnnounceTitleEvent: () => {
-        const [announceTitleEvent, setAnnounceTitleEvent] = useState<boolean>(false)
+      // useAnnounceTitleEvent: () => {
+      //   const [announceTitleEvent, setAnnounceTitleEvent] = useState<boolean>(false)
 
-        useEffect(() => {
-          return subscribeToAnnounceTitleEvent(setAnnounceTitleEvent)
-        }, [])
+      //   useEffect(() => {
+      //     return subscribeToAnnounceTitleEvent(setAnnounceTitleEvent)
+      //   }, [])
 
-        return announceTitleEvent
-      },
+      //   return announceTitleEvent
+      // },
     }
   }, [])
 }
@@ -215,12 +215,12 @@ function developerWarning(): never {
 const DocumentTitleContext = {
   useDocumentEntitler: developerWarning,
   useAnnounceTitleDisabler: developerWarning,
-  useAnnounceTitleOnUnmount: developerWarning,
+  // useAnnounceTitleOnUnmount: developerWarning,
   useUpdateDocumentTitle: developerWarning,
   useDocumentTitle: developerWarning,
   useAnnouncedTitle: developerWarning,
   useDisableAnnounceTitle: developerWarning,
-  useAnnounceTitleEvent: developerWarning,
+  // useAnnounceTitleEvent: developerWarning,
 }
 
 const AccessibilityContext = createContext<Context>({

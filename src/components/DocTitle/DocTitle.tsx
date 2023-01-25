@@ -46,21 +46,29 @@ function useUpdateDocumentTitle(title: string) {
 }
 
 function DocumentTitle() {
-  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent, useAnnouncedTitle } = useA11y()
+  const {
+    useDocumentTitle,
+    useDisableAnnounceTitle,
+    //useAnnounceTitleEvent,
+    useAnnouncedTitle,
+  } = useA11y()
   const documentTitle = useDocumentTitle()
   const announcedTitle = useAnnouncedTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
   useUpdateDocumentTitle(documentTitle)
-  const announceTitleEvent = useAnnounceTitleEvent()
+  // const announceTitleEvent = useAnnounceTitleEvent()
   const showToast = useToast(
     TITLE_LIVE_REGION_TIMEOUT,
-    toastDeps(documentTitle, disableAnnounceTitle, announceTitleEvent)
+    toastDeps(
+      documentTitle,
+      disableAnnounceTitle //announceTitleEvent
+    )
   )
 
   // useDebug(['Sanity', 'check'], [])
   // useDebug(['====> title changed', documentTitle], [documentTitle])
   // useDebug(['====> disableAnnounceTitle changed', disableAnnounceTitle], [disableAnnounceTitle])
-  useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
+  // useDebug(['====> announceTitleEvent changed', announceTitleEvent], [announceTitleEvent])
   // useDebug(
   //   [`<SROnlyToast>${liveRegionContent(showToast, announcedTitle, disableAnnounceTitle)}</SROnlyToast>`],
   //   [announcedTitle, disableAnnounceTitle]
@@ -114,9 +122,9 @@ function DocTitleCard(props: DocumentTitleOptions & { muted?: boolean }) {
       <span className="whitespace-nowrap">
         Disable SR: <span className="font-bold">{props.disableAnnounceTitle ? 'true' : 'false'}</span>
       </span>
-      <span className="whitespace-nowrap">
+      {/* <span className="whitespace-nowrap">
         @unmount: <span className="font-bold">{props.announceTitleOnUnmount ? 'true' : 'false'}</span>
-      </span>
+      </span> */}
     </Card>
   )
 }
@@ -185,7 +193,7 @@ function DocumentEntitler(props: DocumentTitleOptions) {
     priority: props.priority || 'page',
     title: props.title,
     disableAnnounceTitle: props.disableAnnounceTitle,
-    announceTitleOnUnmount: props.announceTitleOnUnmount,
+    // announceTitleOnUnmount: props.announceTitleOnUnmount,
   })
 
   return <DocTitleCard {...props} />
@@ -291,13 +299,25 @@ function ToggleableAnnounceTitleOnUnmount({ initialState }: { initialState?: boo
 }
 
 function ContextStatus() {
-  const { useDocumentTitle, useDisableAnnounceTitle, useAnnounceTitleEvent, useAnnouncedTitle } = useA11y()
+  const {
+    useDocumentTitle,
+    useDisableAnnounceTitle,
+    //useAnnounceTitleEvent,
+    useAnnouncedTitle,
+  } = useA11y()
   const title = useDocumentTitle()
   const announcedTitle = useAnnouncedTitle()
   const disableAnnounceTitle = useDisableAnnounceTitle()
-  const announceTitleEvent = useAnnounceTitleEvent()
+  // const announceTitleEvent = useAnnounceTitleEvent()
   // const announceTitleFlicker = useFlicker(announceTitleEvent)
-  const showToast = useToast(TITLE_LIVE_REGION_TIMEOUT, toastDeps(title, disableAnnounceTitle, announceTitleEvent))
+  const showToast = useToast(
+    TITLE_LIVE_REGION_TIMEOUT,
+    toastDeps(
+      title,
+      disableAnnounceTitle
+      //announceTitleEvent
+    )
+  )
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
@@ -308,10 +328,10 @@ function ContextStatus() {
       <span>
         Live region aria-live: <span className="font-bold">{liveRegion(disableAnnounceTitle)}</span>
       </span>
-      <span>
+      {/* <span>
         Live region aria-hidden:{' '}
         <span className="font-bold">{flickerCondition({ announceTitleEvent }) ? 'true' : 'false'}</span>
-      </span>
+      </span> */}
       <span>
         Live region content:{' '}
         <span className="font-bold">{liveRegionContent(showToast, announcedTitle, disableAnnounceTitle) || '--'}</span>

@@ -11,7 +11,7 @@ export type DocumentTitleOptions = {
   priority?: Priority
   title?: string
   disableAnnounceTitle?: boolean
-  announceTitleOnUnmount?: boolean
+  // announceTitleOnUnmount?: boolean
 }
 
 export type DocumentEntitlerItem = {
@@ -31,7 +31,7 @@ export type TDocumentTitleContext = Readonly<{
   useDocumentTitle: () => string
   useAnnouncedTitle: () => string
   useDisableAnnounceTitle: () => boolean
-  useAnnounceTitleEvent: () => boolean
+  // useAnnounceTitleEvent: () => boolean
 }>
 
 export type Context = Readonly<TDocumentTitleContext>

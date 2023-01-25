@@ -70,10 +70,14 @@ const liveRegionAriaHidden = (payload: { announceTitleFlicker: boolean }): boole
 
 const flickerCondition = (payload: { announceTitleEvent?: boolean }) => false // !!payload.announceTitleEvent
 
-const toastDeps = (title: string, disableAnnounceTitle: boolean, announceTitleEvent: boolean) => [
+const toastDeps = (
+  title: string,
+  disableAnnounceTitle: boolean
+  //announceTitleEvent: boolean
+) => [
   title,
   disableAnnounceTitle,
-  announceTitleEvent,
+  // announceTitleEvent,
 ]
 
 const useDebug = (args: unknown[], deps: unknown[]) => {
