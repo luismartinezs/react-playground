@@ -39,13 +39,13 @@ function useDocumentTitleObservable() {
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
     }
 
-    function addDisableAnnounceTitle() {
-      debug('addDisableAnnounceTitle')
-      announceTitleOnUnmount$.next(true)
-      setTimeout(() => {
-        announceTitleOnUnmount$.next(false)
-      }, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT)
-    }
+    // function addDisableAnnounceTitle() {
+    //   debug('addDisableAnnounceTitle')
+    //   announceTitleOnUnmount$.next(true)
+    //   setTimeout(() => {
+    //     announceTitleOnUnmount$.next(false)
+    //   }, ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT)
+    // }
 
     function pipeDocumentEntitlerItems<Value>(
       mappingFn: (items: DocumentEntitlerItem[]) => Value,
@@ -128,9 +128,9 @@ function useDocumentTitleObservable() {
         useEffect(() => {
           addEntitler({ id, priority, title, disableAnnounceTitle })
           return () => {
-            if (announceTitleOnUnmount) {
-              addDisableAnnounceTitle()
-            }
+            // if (announceTitleOnUnmount) {
+            //   addDisableAnnounceTitle()
+            // }
             removeEntitler(id)
           }
         }, [priority, title])
@@ -148,9 +148,9 @@ function useDocumentTitleObservable() {
         }, [priority])
       },
       useAnnounceTitleOnUnmount: () => {
-        useEffect(() => {
-          return addDisableAnnounceTitle
-        })
+        // useEffect(() => {
+        //   return addDisableAnnounceTitle
+        // })
       },
       useUpdateDocumentTitle: ({ priority = 'page', title = '' }: Partial<DocumentTitleOptions>) => {
         const id = useId()
