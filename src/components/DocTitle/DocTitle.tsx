@@ -20,13 +20,23 @@ function useSetDocumentTitle(title: string) {
   }, [title])
 }
 
-function DocumentTitle() {
-  const { useDocumentTitle, useAnnouncedTitle } = useA11y()
-  const documentTitle = useDocumentTitle()
+function AnnouncedTitle() {
+  const { useAnnouncedTitle } = useA11y()
   const announcedTitle = useAnnouncedTitle()
+
+  return <>{announcedTitle}</>
+}
+
+function DocumentTitle() {
+  const { useDocumentTitle } = useA11y()
+  const documentTitle = useDocumentTitle()
   useSetDocumentTitle(documentTitle)
 
-  return <SROnly>{announcedTitle}</SROnly>
+  return (
+    <SROnly>
+      <AnnouncedTitle />
+    </SROnly>
+  )
 }
 
 function AccessibleDocumentTitle() {
@@ -164,9 +174,10 @@ function ToggleableAnnounceTitleDisabler({ initialState }: { initialState?: bool
 }
 
 function ContextStatus() {
-  const { useDocumentTitle, useAnnouncedTitle } = useA11y()
+  const { useDocumentTitle } = useA11y()
   const documentTitle = useDocumentTitle()
-  const announcedTitle = useAnnouncedTitle()
+
+  // it's very strange but if this component tries to use the announced title, it won't work, it might have to do with rerenders, but I don't know
 
   return (
     <div className="flex flex-col p-4 m-2 border rounded-xl border-sky-500 ring-1 ring-offset-2 ring-sky-500 ring-offset-sky-100">
@@ -175,7 +186,7 @@ function ContextStatus() {
         Document Title: <span className="font-bold">{documentTitle}</span>
       </span>
       <span>
-        Live region content: <span className="font-bold">{announcedTitle}</span>
+        Live region content: <span className="font-bold">{/* <AnnouncedTitle /> */}</span>
       </span>
     </div>
   )
