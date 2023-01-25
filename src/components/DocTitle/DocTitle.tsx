@@ -19,6 +19,20 @@ import { AccessibilityProvider, useA11y } from './provider'
 import type { DocumentTitleOptions, Priority } from './types'
 import { ANNOUNCE_TITLE_ON_UNMOUNT_TIMEOUT, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
+function Button({ enabled, onClick }: { enabled: boolean; onClick: () => void }) {
+  return (
+    <button
+      className={classnames(
+        'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
+        enabled ? 'bg-green-400' : 'bg-red-400'
+      )}
+      onClick={onClick}
+    >
+      <span aria-hidden="true">{enabled ? 'ON' : 'OFF'}</span>
+    </button>
+  )
+}
+
 function useUpdateDocumentTitle(title: string) {
   useEffect(() => {
     const oldTitle = document.title
@@ -186,18 +200,12 @@ function ToggleableDocumentEntitler(props: DocumentTitleOptions & { initialState
 
   return (
     <div className="relative">
-      <button
-        className={classnames(
-          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
-          enabled ? 'bg-green-400' : 'bg-red-400'
-        )}
+      <Button
         onClick={() => {
-          console.log('toggle')
           toggle()
         }}
-      >
-        {enabled ? 'ON' : 'OFF'}
-      </button>
+        enabled={enabled}
+      />
       {enabled ? <DocumentEntitler {...props} /> : <DocumentEntitlerSkeleton {...props} />}
     </div>
   )
@@ -239,18 +247,12 @@ function ToggleableUpdateDocumentTitle(props: { title: string; priority?: Priori
 
   return (
     <div className="relative">
-      <button
-        className={classnames(
-          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
-          enabled ? 'bg-green-400' : 'bg-red-400'
-        )}
+      <Button
         onClick={() => {
-          console.log('toggle')
           toggle()
         }}
-      >
-        {enabled ? 'ON' : 'OFF'}
-      </button>
+        enabled={enabled}
+      />
       {enabled ? <DocumentUpdater {...props} /> : <DocumentUpdaterStatic {...props} muted={true} />}
     </div>
   )
@@ -261,18 +263,12 @@ function ToggleableAnnounceTitleDisabler({ initialState }: { initialState?: bool
 
   return (
     <div className="relative">
-      <button
-        className={classnames(
-          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
-          enabled ? 'bg-green-400' : 'bg-red-400'
-        )}
+      <Button
         onClick={() => {
-          console.log('toggle')
           toggle()
         }}
-      >
-        {enabled ? 'ON' : 'OFF'}
-      </button>
+        enabled={enabled}
+      />
       {enabled ? <DocumentTitleDisabler /> : <DocumentTitleDisablerStatic muted={true} />}
     </div>
   )
@@ -283,18 +279,12 @@ function ToggleableAnnounceTitleOnUnmount({ initialState }: { initialState?: boo
 
   return (
     <div className="relative">
-      <button
-        className={classnames(
-          'absolute top-1 right-1 p-2 m-2 text-sm font-bold text-white rounded-full',
-          enabled ? 'bg-green-400' : 'bg-red-400'
-        )}
+      <Button
         onClick={() => {
-          console.log('toggle')
           toggle()
         }}
-      >
-        {enabled ? 'ON' : 'OFF'}
-      </button>
+        enabled={enabled}
+      />
       {enabled ? <AnnounceDocumentTitleOnUnmount /> : <AnnounceDocumentTitleOnUnmountStatic muted={true} />}
     </div>
   )
