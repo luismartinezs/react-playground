@@ -186,7 +186,7 @@ function ContextStatus() {
         Document Title: <span className="font-bold">{documentTitle}</span>
       </span>
       <span>
-        Live region content: <span className="font-bold">{/* <AnnouncedTitle /> */}</span>
+        Live region content: <span className="font-bold">{<AnnouncedTitle />}</span>
       </span>
     </div>
   )
