@@ -44,7 +44,6 @@ function useDocumentTitleObservable() {
       map((state) => {
         return state.sort(sortByPriority)[0] || { id: 'null' }
       }),
-      filter((item) => item.disableAnnounceTitle || !!item.title),
       distinctUntilKeyChanged('id'),
       debounce(() => timer(TITLE_DEBOUNCE_TIME)),
       scan(handleHistory, []),
