@@ -11,40 +11,43 @@ import {
   tap,
   distinctUntilKeyChanged,
   scan,
+  filter,
 } from 'rxjs'
 
 import { debug, useId } from './util'
 import type { Context, DocumentEntitlerItem, DocumentTitleOptions, Priority } from './types'
 import { PRIORITY_SORT_MAP, TITLE_DEBOUNCE_TIME, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
+function handleHistory(history: DocumentEntitlerItem[], item: DocumentEntitlerItem) {
+  if (!item) {
+    return history
+  }
+  const { disableAnnounceTitle, title, id } = item
+  const isIdInHistory = history.find((el) => el.id === id)
+
+  if (title) {
+    if (disableAnnounceTitle || isIdInHistory) {
+      return [{ ...item, title: '' }]
+    }
+    return [item]
+  }
+  if (disableAnnounceTitle) {
+    return [...history, { ...item, title: '' }]
+  }
+  return history
+}
+
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
-    const announcedIds = new Set()
     const announcedTitle$ = documentEntitlerItems$.pipe(
       map((state) => {
         return state.sort(sortByPriority)[0] || { id: 'null' }
       }),
+      filter((item) => item.disableAnnounceTitle || !!item.title),
       distinctUntilKeyChanged('id'),
       debounce(() => timer(TITLE_DEBOUNCE_TIME)),
-      scan((history: DocumentEntitlerItem[], item: DocumentEntitlerItem) => {
-        if (!item) {
-          return history
-        }
-        if (item.disableAnnounceTitle) {
-          if (item.title) {
-            return [{ ...item, title: '' }]
-          }
-          return [...history, { ...item, title: '' }]
-        }
-        if (item.title) {
-          if (history.find((el) => el.id === item.id)) {
-            return [{ ...item, title: '' }]
-          }
-          return [item]
-        }
-        return [...history, item]
-      }, []),
+      scan(handleHistory, []),
       map((history) => (history.length > 0 ? history.at(-1)?.title || '' : ''))
     )
 
@@ -163,7 +166,6 @@ function useDocumentTitleObservable() {
 
         useEffect(() => {
           return subscribeToAnnouncedTitle((newTitle) => {
-            // debug('useAnnouncedTitle', newTitle)
             setTitle(newTitle)
           })
         }, [])
@@ -193,7 +195,6 @@ const DocumentTitleContext = {
   useUpdateDocumentTitle: developerWarning,
   useDocumentTitle: developerWarning,
   useAnnouncedTitle: developerWarning,
-  useDisableAnnounceTitle: developerWarning,
 }
 
 const AccessibilityContext = createContext<Context>({

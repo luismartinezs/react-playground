@@ -23,12 +23,11 @@ export type DocumentEntitlerItem = {
 export type TDocumentTitleContext = Readonly<{
   // setters
   useDocumentEntitler: (args: DocumentTitleOptions) => void
-  useAnnounceTitleDisabler: () => void
+  useAnnounceTitleDisabler: (args?: { priority?: Priority }) => void
   useUpdateDocumentTitle: (args: DocumentTitlePayload) => void
   // getters
   useDocumentTitle: () => string
   useAnnouncedTitle: () => string
-  useDisableAnnounceTitle: () => boolean
 }>
 
 export type Context = Readonly<TDocumentTitleContext>
