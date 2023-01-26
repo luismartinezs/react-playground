@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import {
   BehaviorSubject,
   map,
@@ -8,13 +8,11 @@ import {
   Observable,
   debounceTime,
   merge,
-  tap,
   distinctUntilKeyChanged,
   scan,
-  filter,
 } from 'rxjs'
 
-import { debug, useId } from './util'
+import { useId } from './util'
 import type { Context, DocumentEntitlerItem, DocumentTitleOptions, Priority } from './types'
 import { PRIORITY_SORT_MAP, TITLE_DEBOUNCE_TIME, TITLE_LIVE_REGION_TIMEOUT } from './constants'
 
@@ -37,9 +35,30 @@ function handleHistory(history: DocumentEntitlerItem[], item: DocumentEntitlerIt
   return history
 }
 
+function emitAfterTimeout<T>(source$: Observable<T>, timeout: number, value: T) {
+  return source$.pipe(
+    debounceTime(timeout),
+    map(() => value)
+  )
+}
+
+function sortByPriority(a: DocumentEntitlerItem, b: DocumentEntitlerItem) {
+  return PRIORITY_SORT_MAP[b.priority] <= PRIORITY_SORT_MAP[a.priority] ? -1 : 1
+}
+
 function useDocumentTitleObservable() {
   return useMemo(() => {
     const documentEntitlerItems$ = new BehaviorSubject<DocumentEntitlerItem[]>([])
+
+    const documentTitle$ = documentEntitlerItems$.pipe(
+      map((state) => {
+        return state.filter((item) => item.title).sort(sortByPriority)[0]?.title || ''
+        // set a debounce time to ignore multiple titles in quick succession
+      }),
+      distinctUntilChanged(),
+      debounce(() => timer(TITLE_DEBOUNCE_TIME))
+    )
+
     const announcedTitle$ = documentEntitlerItems$.pipe(
       map((state) => {
         return state.sort(sortByPriority)[0] || { id: 'null' }
@@ -63,52 +82,12 @@ function useDocumentTitleObservable() {
       documentEntitlerItems$.next(documentEntitlerItems$.getValue().filter((item) => item.id !== id))
     }
 
-    function pipeDocumentEntitlerItems<Value>(
-      mappingFn: (items: DocumentEntitlerItem[]) => Value,
-      debounceTime: number,
-      comparator: (previous: Value, current: Value) => boolean = (previous, current) => previous === current
-    ): Observable<Value> {
-      return documentEntitlerItems$.pipe(
-        map(mappingFn),
-        distinctUntilChanged(comparator),
-        debounce(() => timer(debounceTime))
-      )
-    }
-
-    function sortByPriority(a: DocumentEntitlerItem, b: DocumentEntitlerItem) {
-      return PRIORITY_SORT_MAP[b.priority] <= PRIORITY_SORT_MAP[a.priority] ? -1 : 1
-    }
-
-    function emitAfterTimeout<T>(source$: Observable<T>, timeout: number, value: T) {
-      return source$.pipe(
-        debounceTime(timeout),
-        map(() => value)
-      )
-    }
-
     function subscribeToDocumentTitle(callback: (value: string) => void) {
-      const documentTitle$ = pipeDocumentEntitlerItems<string>((state) => {
-        return state.filter((item) => item.title).sort(sortByPriority)[0]?.title || ''
-        // set a debounce time to ignore multiple titles in quick succession
-      }, TITLE_DEBOUNCE_TIME)
-      const sub = documentTitle$.subscribe(callback)
-
-      return () => sub.unsubscribe()
+      return documentTitle$.subscribe(callback).unsubscribe
     }
 
     function subscribeToAnnouncedTitle(callback: (value: string) => void) {
-      const sub = announcedTitleWithTimeout$.subscribe(callback)
-
-      return () => sub.unsubscribe()
-    }
-
-    function subscribeToDisableAnnounceTitle(callback: (value: boolean) => void) {
-      const disableSRAnnounce$ = pipeDocumentEntitlerItems<boolean>((state) => {
-        return Boolean(state.sort(sortByPriority)[0]?.disableAnnounceTitle)
-      }, 0)
-      const sub = disableSRAnnounce$.subscribe(callback)
-
-      return () => sub.unsubscribe()
+      return announcedTitleWithTimeout$.subscribe(callback).unsubscribe
     }
 
     return {
@@ -170,15 +149,6 @@ function useDocumentTitleObservable() {
         }, [])
 
         return title
-      },
-      useDisableAnnounceTitle: () => {
-        const [disableAnnounceTitle, setDisableAnnounceTitle] = useState<boolean>(false)
-
-        useEffect(() => {
-          return subscribeToDisableAnnounceTitle(setDisableAnnounceTitle)
-        }, [])
-
-        return disableAnnounceTitle
       },
     }
   }, [])
