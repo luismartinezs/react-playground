@@ -25,7 +25,7 @@ const routes = [
   },
 
   // new component link here
-  { path: 'tabs', label: 'Tabs' },
+  { path: 'tabs-example', label: 'TabsExample' },
   { path: 'doc-title', label: 'DocTitle' },
   { path: 'counter-game', label: 'CounterGame' },
   { path: 'react-hook-form', label: 'ReactHookForm' },

@@ -13,8 +13,8 @@ type TabsComponent = ((props: TabsProps) => React.ReactElement) & {
   Panel: typeof TabsPanel
 }
 
-const Tabs: TabsComponent = ({ defaultValue }: TabsProps) => {
-  return <TabsProvider defaultValue={defaultValue}>Tabs</TabsProvider>
+const Tabs: TabsComponent = ({ defaultValue, children }: TabsProps) => {
+  return <TabsProvider defaultValue={defaultValue}>{children}</TabsProvider>
 }
 
 Tabs.List = TabsList
