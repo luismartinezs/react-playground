@@ -14,7 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
-import { Tabs } from './components/TabGroup'
+import { Tabs } from './components/Tabs'
 import DocTitle from './components/DocTitle'
 import CounterGame from './components/CounterGame'
 import ReactHookForm from './components/ReactHookForm'
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
-      { path: 'tab-group', element: <Tabs /> },
+      { path: 'tabs', element: <Tabs /> },
       { path: 'doc-title', element: <DocTitle /> },
       { path: 'counter-game', element: <CounterGame /> },
       { path: 'react-hook-form', element: <ReactHookForm /> },
