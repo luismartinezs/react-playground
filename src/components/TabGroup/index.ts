@@ -1,3 +1,1 @@
-import TabGroup from './TabGroup'
-
-export default TabGroup
+export { Tabs } from './Tabs';
