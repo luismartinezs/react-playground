@@ -7,36 +7,17 @@ const lorem = [
   'Non aliquip cupidatat incididunt eiusmod nostrud culpa nulla sit labore eiusmod nisi voluptate. Aute deserunt ullamco ex minim mollit ipsum ea. Amet cupidatat elit exercitation irure ex sint proident incididunt mollit excepteur aliqua magna dolor.',
 ]
 
-function getPreviousIndex(current: number, elements: HTMLButtonElement[]) {
-  for (let i = current - 1; i >= 0; i -= 1) {
-    if (!elements[i].disabled) {
-      return i
-    }
-  }
+function getNextIndex(current: number, elements: HTMLButtonElement[]): number {
+  const next = (current + 1) % elements.length
 
-  for (let i = elements.length - 1; i > -1; i -= 1) {
-    if (!elements[i].disabled) {
-      return i
-    }
-  }
-
-  return current
+  return elements[next].disabled ? getNextIndex(next, elements) : next
 }
 
-function getNextIndex(current: number, elements: HTMLButtonElement[]) {
-  for (let i = current + 1; i < elements.length; i += 1) {
-    if (!elements[i].disabled) {
-      return i
-    }
-  }
+function getPreviousIndex(current: number, elements: HTMLButtonElement[]): number {
+  const total = elements.length
+  const previous = (current + total - 1) % total
 
-  for (let i = 0; i < elements.length; i += 1) {
-    if (!elements[i].disabled) {
-      return i
-    }
-  }
-
-  return current
+  return elements[previous].disabled ? getPreviousIndex(previous, elements) : previous
 }
 
 function App() {
