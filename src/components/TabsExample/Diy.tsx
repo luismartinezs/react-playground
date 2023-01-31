@@ -1,3 +1,4 @@
+import { useId } from '@/util'
 import classNames from 'classnames'
 import { createContext, useContext, useState } from 'react'
 
@@ -6,6 +7,14 @@ const lorem = [
   'Dolore consectetur nulla anim cillum do eu. Irure adipisicing velit esse in non. Voluptate eiusmod laborum do eu proident officia commodo id dolore proident et aute cupidatat. Sint voluptate nisi aute sit.',
   'Non aliquip cupidatat incididunt eiusmod nostrud culpa nulla sit labore eiusmod nisi voluptate. Aute deserunt ullamco ex minim mollit ipsum ea. Amet cupidatat elit exercitation irure ex sint proident incididunt mollit excepteur aliqua magna dolor.',
 ]
+
+function getTabId(id: string, value: string) {
+  return `${id}-${value}-tab`
+}
+
+function getPanelId(id: string, value: string) {
+  return `${id}-${value}-panel`
+}
 
 function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
   const elements = Array.from(event.currentTarget.parentElement?.children || [])
@@ -46,12 +55,14 @@ function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
 const TabsContext = createContext({
   value: '',
   onTabChange: (value: string) => {},
+  id: '',
 })
 
 function TabsProvider({ defaultValue, children }) {
   const [value, onChange] = useState(defaultValue)
+  const id = useId()
 
-  return <TabsContext.Provider value={{ value, onTabChange: onChange }}>{children}</TabsContext.Provider>
+  return <TabsContext.Provider value={{ value, onTabChange: onChange, id }}>{children}</TabsContext.Provider>
 }
 
 function getNextIndex(current: number, elements: HTMLButtonElement[]): number {
@@ -67,8 +78,21 @@ function getPreviousIndex(current: number, elements: HTMLButtonElement[]): numbe
   return elements[previous].disabled ? getPreviousIndex(previous, elements) : previous
 }
 
-function TabPanel({ children }) {
-  return <></>
+function TabPanel({ children, value }: { children: React.ReactNode; value: string }) {
+  const ctx = useContext(TabsContext)
+  const active = ctx.value === value
+
+  return (
+    <div
+      role="tabpanel"
+      id={getPanelId(ctx.id, ctx.value)}
+      className={classNames(active ? 'block' : 'hidden')}
+      aria-labelledby={getTabId(ctx.id, ctx.value)}
+      tabIndex={active ? 0 : -1}
+    >
+      {children}
+    </div>
+  )
 }
 
 function Tab({ value, children }: { value: string; children: React.ReactNode }) {
@@ -87,8 +111,8 @@ function Tab({ value, children }: { value: string; children: React.ReactNode }) 
       role="tab"
       tabIndex={ctx.value === value ? 0 : -1}
       onClick={() => activateTab('one')}
-      aria-controls="tabs-one-panel"
-      id="tabs-one-tab"
+      aria-controls={getPanelId(ctx.id, value)}
+      id={getTabId(ctx.id, value)}
       onKeyDown={(e) => handleKeyDown(e)}
     >
       {children}
@@ -118,36 +142,18 @@ function App() {
         <Tab value="two">Tab 2</Tab>
         <Tab value="three">Tab 3</Tab>
       </TabsList>
-      <div
-        role="tabpanel"
-        id="tabs-one-panel"
-        className={classNames(value === 'one' ? 'block' : 'hidden')}
-        aria-labelledby="tabs-one-tab"
-        tabIndex={value === 'one' ? 0 : -1}
-      >
+      <TabPanel value="one">
         <h2>Tab 1 content</h2>
         <p>{lorem[0]}</p>
-      </div>
-      <div
-        role="tabpanel"
-        id="tabs-two-panel"
-        className={classNames(value === 'two' ? 'block' : 'hidden')}
-        aria-labelledby="tabs-two-tab"
-        tabIndex={value === 'two' ? 0 : -1}
-      >
+      </TabPanel>
+      <TabPanel value="two">
         <h2>Tab 2 content</h2>
         <p>{lorem[1]}</p>
-      </div>
-      <div
-        role="tabpanel"
-        id="tabs-three-panel"
-        className={classNames(value === 'three' ? 'block' : 'hidden')}
-        aria-labelledby="tabs-three-tab"
-        tabIndex={value === 'three' ? 0 : -1}
-      >
+      </TabPanel>
+      <TabPanel value="three">
         <h2>Tab 3 content</h2>
         <p>{lorem[2]}</p>
-      </div>
+      </TabPanel>
     </TabsProvider>
   )
 }
