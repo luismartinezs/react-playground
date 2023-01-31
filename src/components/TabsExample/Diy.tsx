@@ -110,7 +110,7 @@ function Tab({ value, children }: { value: string; children: React.ReactNode }) 
       className="button"
       role="tab"
       tabIndex={ctx.value === value ? 0 : -1}
-      onClick={() => activateTab('one')}
+      onClick={() => activateTab(value)}
       aria-controls={getPanelId(ctx.id, value)}
       id={getTabId(ctx.id, value)}
       onKeyDown={(e) => handleKeyDown(e)}
