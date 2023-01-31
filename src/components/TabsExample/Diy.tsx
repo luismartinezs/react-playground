@@ -8,6 +8,16 @@ const lorem = [
   'Non aliquip cupidatat incididunt eiusmod nostrud culpa nulla sit labore eiusmod nisi voluptate. Aute deserunt ullamco ex minim mollit ipsum ea. Amet cupidatat elit exercitation irure ex sint proident incididunt mollit excepteur aliqua magna dolor.',
 ]
 
+export function findElementAncestor(element: HTMLElement, selector: string) {
+  let _element: HTMLElement | null = element
+  while ((_element = _element.parentElement) && !_element.matches(selector));
+  return _element
+}
+
+function onSameLevel(target: HTMLButtonElement, sibling: HTMLButtonElement, parentSelector: string) {
+  return findElementAncestor(target, parentSelector) === findElementAncestor(sibling, parentSelector)
+}
+
 function getTabId(id: string, value: string) {
   return `${id}-${value}-tab`
 }
@@ -17,10 +27,13 @@ function getPanelId(id: string, value: string) {
 }
 
 function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-  const elements = Array.from(event.currentTarget.parentElement?.children || [])
   const parentSelector = '[role="tablist"]'
   const siblingSelector = '[role="tab"]'
+  const activateOnFocus = true
 
+  const elements = Array.from(
+    findElementAncestor(event.currentTarget, parentSelector)?.querySelectorAll<HTMLButtonElement>(siblingSelector) || []
+  ).filter((node) => onSameLevel(event.currentTarget, node, parentSelector))
   const current = elements.findIndex((el) => event.currentTarget === el)
   const nextIndex = getNextIndex(current, elements)
   const previousIndex = getPreviousIndex(current, elements)
@@ -30,13 +43,13 @@ function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
       event.stopPropagation()
       event.preventDefault()
       elements[nextIndex].focus()
-      elements[nextIndex].click()
+      activateOnFocus && elements[nextIndex].click()
       break
     case 'ArrowLeft':
       event.stopPropagation()
       event.preventDefault()
       elements[previousIndex].focus()
-      elements[previousIndex].click()
+      activateOnFocus && elements[previousIndex].click()
       break
     case 'Home':
       event.stopPropagation()
@@ -58,7 +71,7 @@ const TabsContext = createContext({
   id: '',
 })
 
-function TabsProvider({ defaultValue, children }) {
+function TabsProvider({ defaultValue, children }: { defaultValue: string; children: React.ReactNode }) {
   const [value, onChange] = useState(defaultValue)
   const id = useId()
 
