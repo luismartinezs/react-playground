@@ -1,6 +1,7 @@
 import { useId } from '@/util'
 import classNames from 'classnames'
 import { createContext, useContext, useState } from 'react'
+import { createScopedKeydownHandler } from './util'
 
 const lorem = [
   'Anim culpa in incididunt exercitation irure ad deserunt ea exercitation. Id in exercitation in eiusmod sit culpa aliqua commodo. Ipsum est do occaecat excepteur consectetur irure qui ipsum. Eiusmod quis veniam sunt ipsum non. Nisi sit mollit adipisicing veniam nisi amet nulla exercitation sint dolor laborum exercitation mollit minim.',
@@ -8,61 +9,12 @@ const lorem = [
   'Non aliquip cupidatat incididunt eiusmod nostrud culpa nulla sit labore eiusmod nisi voluptate. Aute deserunt ullamco ex minim mollit ipsum ea. Amet cupidatat elit exercitation irure ex sint proident incididunt mollit excepteur aliqua magna dolor.',
 ]
 
-export function findElementAncestor(element: HTMLElement, selector: string) {
-  let _element: HTMLElement | null = element
-  while ((_element = _element.parentElement) && !_element.matches(selector));
-  return _element
-}
-
-function onSameLevel(target: HTMLButtonElement, sibling: HTMLButtonElement, parentSelector: string) {
-  return findElementAncestor(target, parentSelector) === findElementAncestor(sibling, parentSelector)
-}
-
 function getTabId(id: string, value: string) {
   return `${id}-${value}-tab`
 }
 
 function getPanelId(id: string, value: string) {
   return `${id}-${value}-panel`
-}
-
-function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-  const parentSelector = '[role="tablist"]'
-  const siblingSelector = '[role="tab"]'
-  const activateOnFocus = true
-
-  const elements = Array.from(
-    findElementAncestor(event.currentTarget, parentSelector)?.querySelectorAll<HTMLButtonElement>(siblingSelector) || []
-  ).filter((node) => onSameLevel(event.currentTarget, node, parentSelector))
-  const current = elements.findIndex((el) => event.currentTarget === el)
-  const nextIndex = getNextIndex(current, elements)
-  const previousIndex = getPreviousIndex(current, elements)
-
-  switch (event.key) {
-    case 'ArrowRight':
-      event.stopPropagation()
-      event.preventDefault()
-      elements[nextIndex].focus()
-      activateOnFocus && elements[nextIndex].click()
-      break
-    case 'ArrowLeft':
-      event.stopPropagation()
-      event.preventDefault()
-      elements[previousIndex].focus()
-      activateOnFocus && elements[previousIndex].click()
-      break
-    case 'Home':
-      event.stopPropagation()
-      event.preventDefault()
-      !elements[0].disabled && elements[0].focus()
-      break
-    case 'End':
-      event.stopPropagation()
-      event.preventDefault()
-      const last = elements.length - 1
-      !elements[last].disabled && elements[last].focus()
-      break
-  }
 }
 
 const TabsContext = createContext({
@@ -76,19 +28,6 @@ function TabsProvider({ defaultValue, children }: { defaultValue: string; childr
   const id = useId()
 
   return <TabsContext.Provider value={{ value, onTabChange: onChange, id }}>{children}</TabsContext.Provider>
-}
-
-function getNextIndex(current: number, elements: HTMLButtonElement[]): number {
-  const next = (current + 1) % elements.length
-
-  return elements[next].disabled ? getNextIndex(next, elements) : next
-}
-
-function getPreviousIndex(current: number, elements: HTMLButtonElement[]): number {
-  const total = elements.length
-  const previous = (current + total - 1) % total
-
-  return elements[previous].disabled ? getPreviousIndex(previous, elements) : previous
 }
 
 function TabPanel({ children, value }: { children: React.ReactNode; value: string }) {
@@ -126,7 +65,11 @@ function Tab({ value, children }: { value: string; children: React.ReactNode }) 
       onClick={() => activateTab(value)}
       aria-controls={getPanelId(ctx.id, value)}
       id={getTabId(ctx.id, value)}
-      onKeyDown={(e) => handleKeyDown(e)}
+      onKeyDown={createScopedKeydownHandler({
+        parentSelector: '[role="tablist"]',
+        siblingSelector: '[role="tab"]',
+        activateOnFocus: true,
+      })}
     >
       {children}
     </button>

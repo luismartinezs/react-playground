@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react'
+import { createScopedKeydownHandler } from './util'
 
 const RadioGroupContext = createContext<{
   value: string | null
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (value: string) => void
   name: string
   setName: (name: string) => void
 }>({
@@ -16,8 +17,8 @@ function RadioGroupProvider({ children }: { children: React.ReactNode }) {
   const [value, setValue] = useState<string | null>(null)
   const [name, setName] = useState<string>('')
 
-  function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setValue(e.target.value)
+  function onChange(value: string) {
+    setValue(value)
   }
 
   return <RadioGroupContext.Provider value={{ value, onChange, setName, name }}>{children}</RadioGroupContext.Provider>
@@ -44,21 +45,29 @@ function RadioGroup({ legend, name, children }: { legend: string; name: string; 
 
 function RadioButton({ value, label }: { value: string; label: string }) {
   const ctx = useRadioGroupContext()
+  function activateRadioButton(value: string) {
+    ctx.onChange(value)
+  }
 
   return (
-    <>
+    <div>
       <input
         type="radio"
         id={value}
         name={ctx.name}
         value={value}
         checked={value === ctx.value}
-        onChange={ctx.onChange}
+        onKeyDown={createScopedKeydownHandler({
+          parentSelector: 'fieldset',
+          siblingSelector: 'input[type="radio"]',
+          activateOnFocus: true,
+        })}
+        onChange={() => activateRadioButton(value)}
       />
       <label htmlFor={value} className="ml-2">
         {label}
       </label>
-    </>
+    </div>
   )
 }
 
