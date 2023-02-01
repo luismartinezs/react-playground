@@ -8,7 +8,7 @@ interface IFormInputs {
 
 const onSubmit: SubmitHandler<IFormInputs> = (data) => console.log(data)
 
-export default function Form({ disabledCheckbox = true }: { disabledCheckbox: boolean }) {
+export default function Form({ disabledCheckbox = true }: { disabledCheckbox?: boolean }) {
   const {
     register,
     formState: { errors },
