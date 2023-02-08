@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import RhfDelay from './components/RhfDelay';
 import TabsExample from './components/TabsExample'
 import DocTitle from './components/DocTitle'
 import CounterGame from './components/CounterGame'
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'rhf-delay', element: <RhfDelay /> },
       { path: 'tabs-example', element: <TabsExample /> },
       { path: 'doc-title', element: <DocTitle /> },
       { path: 'counter-game', element: <CounterGame /> },
