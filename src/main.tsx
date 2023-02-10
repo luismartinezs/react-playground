@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import DupeProps from './components/DupeProps';
 import RhfDelay from './components/RhfDelay';
 import TabsExample from './components/TabsExample'
 import DocTitle from './components/DocTitle'
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'dupe-props', element: <DupeProps /> },
       { path: 'rhf-delay', element: <RhfDelay /> },
       { path: 'tabs-example', element: <TabsExample /> },
       { path: 'doc-title', element: <DocTitle /> },

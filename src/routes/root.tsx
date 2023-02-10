@@ -25,6 +25,7 @@ const routes = [
   },
 
   // new component link here
+  { path: 'dupe-props', label: 'DupeProps' },
   { path: 'rhf-delay', label: 'RhfDelay' },
   { path: 'tabs-example', label: 'TabsExample' },
   { path: 'doc-title', label: 'DocTitle' },
