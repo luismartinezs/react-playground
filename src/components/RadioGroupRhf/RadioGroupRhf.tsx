@@ -2,7 +2,6 @@ import { FC, forwardRef } from 'react'
 
 import Divider from '@/components/Divider'
 import { useForm } from 'react-hook-form'
-import { createLogger } from 'vite'
 
 const RadioInput = forwardRef<
   HTMLInputElement,
