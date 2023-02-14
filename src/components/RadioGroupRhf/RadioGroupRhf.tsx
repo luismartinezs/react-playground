@@ -1,7 +1,11 @@
-import { FC, forwardRef } from 'react'
+import { type FC, forwardRef, type HTMLAttributes, useEffect, useRef } from 'react'
 
 import Divider from '@/components/Divider'
 import { useForm } from 'react-hook-form'
+
+type Rest = {
+  [key: string]: any
+}
 
 const RadioInput = forwardRef<
   HTMLInputElement,
@@ -9,8 +13,7 @@ const RadioInput = forwardRef<
     name: string
     value: string
     label: string
-    [key: string]: any
-  }
+  } & Omit<HTMLAttributes<HTMLInputElement>, 'name' | 'id' | 'type'>
 >(({ name, value, label, ...rest }, ref) => {
   return (
     <div>
@@ -22,16 +25,20 @@ const RadioInput = forwardRef<
   )
 })
 
-const RadioGroup = ({ legend, children }: { legend: string; children: React.ReactNode }) => {
+const RadioGroup = forwardRef<
+  HTMLFieldSetElement,
+  { legend: string; children: React.ReactNode } & HTMLAttributes<HTMLFieldSetElement>
+>(({ legend, children, ...rest }, ref) => {
   return (
-    <fieldset>
+    <fieldset ref={ref} {...rest}>
       <legend>{legend}</legend>
       <div>{children}</div>
     </fieldset>
   )
-}
+})
 
 const Form = () => {
+  const radioGroupRef = useRef<HTMLFieldSetElement>(null)
   const form = useForm()
   const options = [
     { value: '1', label: 'Radio 1' },
@@ -41,13 +48,19 @@ const Form = () => {
     { value: '5', label: 'Radio 5' },
   ]
 
+  useEffect(() => {
+    setTimeout(() => {
+      radioGroupRef.current?.focus()
+    }, 1000)
+  }, [])
+
   const onSubmit = (data: any) => {
     console.log(data)
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <RadioGroup legend="Select one option">
+      <RadioGroup legend="Select one option" ref={radioGroupRef} tabIndex={-1}>
         {options.map((option, idx) => {
           const isFocusable = (!form.watch('options') && idx === 0) || form.watch('options') === option.value
 
