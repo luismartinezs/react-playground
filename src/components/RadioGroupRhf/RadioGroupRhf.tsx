@@ -2,6 +2,7 @@ import { type FC, forwardRef, type HTMLAttributes, useEffect, useRef } from 'rea
 
 import Divider from '@/components/Divider'
 import { useForm } from 'react-hook-form'
+import { createScopedKeydownHandler } from '@/util/keyboardNavigation'
 
 const RadioInput = forwardRef<
   HTMLInputElement,
@@ -13,7 +14,19 @@ const RadioInput = forwardRef<
 >(({ name, value, label, ...rest }, ref) => {
   return (
     <div>
-      <input type="radio" id={name} name={name} value={value} ref={ref} {...rest} />
+      <input
+        type="radio"
+        id={name}
+        name={name}
+        value={value}
+        ref={ref}
+        {...rest}
+        onKeyDown={createScopedKeydownHandler({
+          parentSelector: 'fieldset',
+          siblingSelector: 'input[type="radio"]',
+          activateOnFocus: true,
+        })}
+      />
       <label htmlFor={name} className="ml-2">
         {label}
       </label>

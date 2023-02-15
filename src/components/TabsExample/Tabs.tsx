@@ -85,12 +85,6 @@ function TabsList({ children, className = 'flex gap-2' }: { children: React.Reac
 }
 
 function App() {
-  const [value, onTabChange] = useState<string>('one')
-
-  function activateTab(value: string) {
-    onTabChange(value)
-  }
-
   return (
     <TabsProvider defaultValue="one">
       <TabsList>
