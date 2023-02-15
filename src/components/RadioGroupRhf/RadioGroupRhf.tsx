@@ -3,10 +3,6 @@ import { type FC, forwardRef, type HTMLAttributes, useEffect, useRef } from 'rea
 import Divider from '@/components/Divider'
 import { useForm } from 'react-hook-form'
 
-type Rest = {
-  [key: string]: any
-}
-
 const RadioInput = forwardRef<
   HTMLInputElement,
   {
@@ -26,19 +22,21 @@ const RadioInput = forwardRef<
 })
 
 const RadioGroup = forwardRef<
-  HTMLFieldSetElement,
-  { legend: string; children: React.ReactNode } & HTMLAttributes<HTMLFieldSetElement>
+  HTMLLegendElement,
+  { legend: string; children: React.ReactNode } & HTMLAttributes<HTMLLegendElement>
 >(({ legend, children, ...rest }, ref) => {
   return (
-    <fieldset ref={ref} {...rest}>
-      <legend>{legend}</legend>
+    <fieldset>
+      <legend ref={ref} {...rest}>
+        {legend}
+      </legend>
       <div>{children}</div>
     </fieldset>
   )
 })
 
 const Form = () => {
-  const radioGroupRef = useRef<HTMLFieldSetElement>(null)
+  const radioGroupRef = useRef<HTMLLegendElement>(null)
   const form = useForm()
   const options = [
     { value: '1', label: 'Radio 1' },
