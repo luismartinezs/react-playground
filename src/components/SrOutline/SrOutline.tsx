@@ -12,7 +12,7 @@ const SrOutline: FC = (): JSX.Element => {
       <div className="flex gap-4">
         {steps.map((step) => (
           <div aria-label={`Step ${step}`} key={step} className="rounded-full bg-sky-500 text-white font-bold px-2">
-            {step}
+            <span aria-hidden="true">{step}</span>
           </div>
         ))}
       </div>
