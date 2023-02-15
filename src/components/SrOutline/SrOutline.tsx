@@ -11,12 +11,9 @@ const SrOutline: FC = (): JSX.Element => {
       <Divider />
       <div className="flex gap-4">
         {steps.map((step) => (
-          <>
-            <div className="sr-only">{`Step ${step}`}</div>
-            <div aria-hidden="true" key={step} className="rounded-full bg-sky-500 text-white font-bold px-2">
-              {step}
-            </div>
-          </>
+          <div aria-label={`Step ${step}`} key={step} className="rounded-full bg-sky-500 text-white font-bold px-2">
+            {step}
+          </div>
         ))}
       </div>
     </div>
