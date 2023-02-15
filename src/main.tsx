@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import SrOutline from './components/SrOutline';
 import RadioGroupRhf from './components/RadioGroupRhf';
 import DupeProps from './components/DupeProps';
 import RhfDelay from './components/RhfDelay';
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'sr-outline', element: <SrOutline /> },
       { path: 'radio-group-rhf', element: <RadioGroupRhf /> },
       { path: 'dupe-props', element: <DupeProps /> },
       { path: 'rhf-delay', element: <RhfDelay /> },
