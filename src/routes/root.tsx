@@ -25,6 +25,7 @@ const routes = [
   },
 
   // new component link here
+  { path: 'toggle-attr', label: 'ToggleAttr' },
   { path: 'sr-outline', label: 'SrOutline' },
   { path: 'radio-group-rhf', label: 'RadioGroupRhf' },
   { path: 'dupe-props', label: 'DupeProps' },
