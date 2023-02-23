@@ -61,23 +61,12 @@ function QuizTimer({ timeLimit, quizStartTime, onQuizTimeout }: Props) {
     return <div>Timed out</div>
   }
 
-  const timeLeftMs = endDate - now
+  const timeLeftMs = Math.min(endDate - now, timeLimit)
 
   const timeLeftForMsSr = nearestTimeBlock(timeLeftMs, MS_IN_30_SEC)
 
   const formattedTimeLeft = formatTimeLeft(timeLeftMs)
   const formattedTimeLeftSr = formatTimeLeft(timeLeftForMsSr)
-
-  log({
-    quizStartTime,
-    timeLimit,
-    now,
-    endDate,
-    timeLeftMs,
-    timeLeftForMsSr,
-    formattedTimeLeft,
-    formattedTimeLeftSr,
-  })
 
   return (
     <>
