@@ -25,6 +25,7 @@ const routes = [
   },
 
   // new component link here
+  { path: 'quiz-timer', label: 'QuizTimer' },
   { path: 'toggle-attr', label: 'ToggleAttr' },
   { path: 'sr-outline', label: 'SrOutline' },
   { path: 'radio-group-rhf', label: 'RadioGroupRhf' },
@@ -50,19 +51,21 @@ export default function Root() {
   return (
     <>
       <SkipToContent mainContentRef={mainContentRef} />
-      <h1 className="text-lg font-bold">React playground</h1>
-      <nav className="pb-2 mb-2 border-b border-sky-500">
-        <ul className="flex flex-wrap w-full space-x-2">
-          {routes.map((route, idx) => (
-            <li key={route.path}>
-              <a href={route.path} className="whitespace-nowrap">
-                {route.label}
-              </a>
-              {idx < routes.length - 1 && <span className="inline-block ml-2">-</span>}
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <header>
+        <h1 className="text-lg font-bold">React playground</h1>
+        <nav className="pb-2 mb-2 border-b border-sky-500">
+          <ul className="flex flex-wrap w-full space-x-2">
+            {routes.map((route, idx) => (
+              <li key={route.path}>
+                <a href={route.path} className="whitespace-nowrap">
+                  {route.label}
+                </a>
+                {idx < routes.length - 1 && <span className="inline-block ml-2">-</span>}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
       <main ref={mainContentRef} tabIndex={-1}>
         <Outlet />
       </main>
