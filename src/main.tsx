@@ -14,13 +14,14 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
-import StateOnPropChange from './components/StateOnPropChange';
-import RhfSubmit from './components/RhfSubmit';
-import ToggleAttr from './components/ToggleAttr';
-import SrOutline from './components/SrOutline';
-import RadioGroupRhf from './components/RadioGroupRhf';
-import DupeProps from './components/DupeProps';
-import RhfDelay from './components/RhfDelay';
+import QuizTimer from './components/QuizTimer'
+import StateOnPropChange from './components/StateOnPropChange'
+import RhfSubmit from './components/RhfSubmit'
+import ToggleAttr from './components/ToggleAttr'
+import SrOutline from './components/SrOutline'
+import RadioGroupRhf from './components/RadioGroupRhf'
+import DupeProps from './components/DupeProps'
+import RhfDelay from './components/RhfDelay'
 import TabsExample from './components/TabsExample'
 import DocTitle from './components/DocTitle'
 import CounterGame from './components/CounterGame'
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'quiz-timer', element: <QuizTimer /> },
       { path: 'state-on-prop-change', element: <StateOnPropChange /> },
       { path: 'rhf-submit', element: <RhfSubmit /> },
       { path: 'toggle-attr', element: <ToggleAttr /> },
