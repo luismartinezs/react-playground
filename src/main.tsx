@@ -14,6 +14,8 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import StateOnPropChange from './components/StateOnPropChange';
+import RhfSubmit from './components/RhfSubmit';
 import ToggleAttr from './components/ToggleAttr';
 import SrOutline from './components/SrOutline';
 import RadioGroupRhf from './components/RadioGroupRhf';
@@ -58,6 +60,8 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'state-on-prop-change', element: <StateOnPropChange /> },
+      { path: 'rhf-submit', element: <RhfSubmit /> },
       { path: 'toggle-attr', element: <ToggleAttr /> },
       { path: 'sr-outline', element: <SrOutline /> },
       { path: 'radio-group-rhf', element: <RadioGroupRhf /> },

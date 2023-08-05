@@ -25,6 +25,8 @@ const routes = [
   },
 
   // new component link here
+  { path: 'state-on-prop-change', label: 'StateOnPropChange' },
+  { path: 'rhf-submit', label: 'RhfSubmit' },
   { path: 'toggle-attr', label: 'ToggleAttr' },
   { path: 'sr-outline', label: 'SrOutline' },
   { path: 'radio-group-rhf', label: 'RadioGroupRhf' },
