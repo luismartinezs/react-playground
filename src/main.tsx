@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import FocusUseRef from './components/FocusUseRef';
 import ThemeSwitchUseContext from './components/ThemeSwitchUseContext';
 import CounterUseReducer from './components/CounterUseReducer';
 import QuizTimer from './components/QuizTimer'
@@ -63,6 +64,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'focus-use-ref', element: <FocusUseRef /> },
       { path: 'theme-switch-use-context', element: <ThemeSwitchUseContext /> },
       { path: 'counter-use-reducer', element: <CounterUseReducer /> },
       { path: 'quiz-timer', element: <QuizTimer /> },
