@@ -25,6 +25,7 @@ const routes = [
   },
 
   // new component link here
+  { path: 'input-imperative-handle', label: 'InputImperativeHandle' },
   { path: 'focus-use-ref', label: 'FocusUseRef' },
   { path: 'theme-switch-use-context', label: 'ThemeSwitchUseContext' },
   { path: 'counter-use-reducer', label: 'CounterUseReducer' },
