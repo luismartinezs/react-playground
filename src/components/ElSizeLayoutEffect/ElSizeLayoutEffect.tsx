@@ -17,6 +17,8 @@ const Rectangle: FC = (): JSX.Element => {
   const [color, setColor] = useState('')
   const ref = useRef<HTMLDivElement>(null)
 
+  // NOTE we need useLayoutEffect here because useEffect will run after the DOM is updated and it will cause an unwanted "flicker" effect
+  // we need to use this hook if we need to know something about the way the layout is painted on the screen (e.g. element size) before it is painted on screen
   useLayoutEffect(() => {
     if (!ref.current) return
     const { height, width } = ref.current.getBoundingClientRect()
@@ -50,6 +52,7 @@ const ElSizeLayoutEffect: FC = (): JSX.Element => {
   return (
     <div>
       <h2>ElSizeLayoutEffect</h2>
+      <p>Use useLayoutEffect hook to run calculations on DOM before browser repaints screen</p>
       <button
         className="button mb-2"
         onClick={() => {
