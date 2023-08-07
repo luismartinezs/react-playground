@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import ListUseCallback from './components/ListUseCallback';
 import ListUseMemo from './components/ListUseMemo';
 import ElSizeLayoutEffect from './components/ElSizeLayoutEffect';
 import InputImperativeHandle from './components/InputImperativeHandle';
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'list-use-callback', element: <ListUseCallback /> },
       { path: 'list-use-memo', element: <ListUseMemo /> },
       { path: 'el-size-layout-effect', element: <ElSizeLayoutEffect /> },
       { path: 'input-imperative-handle', element: <InputImperativeHandle /> },
