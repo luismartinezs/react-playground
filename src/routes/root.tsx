@@ -25,6 +25,8 @@ const routes = [
   },
 
   // new component link here
+  { path: 'theme-switch-use-context', label: 'ThemeSwitchUseContext' },
+  { path: 'counter-use-reducer', label: 'CounterUseReducer' },
   { path: 'quiz-timer', label: 'QuizTimer' },
   { path: 'state-on-prop-change', label: 'StateOnPropChange' },
   { path: 'rhf-submit', label: 'RhfSubmit' },

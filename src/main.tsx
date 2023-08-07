@@ -14,6 +14,8 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import ThemeSwitchUseContext from './components/ThemeSwitchUseContext';
+import CounterUseReducer from './components/CounterUseReducer';
 import QuizTimer from './components/QuizTimer'
 import StateOnPropChange from './components/StateOnPropChange'
 import RhfSubmit from './components/RhfSubmit'
@@ -61,6 +63,8 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'theme-switch-use-context', element: <ThemeSwitchUseContext /> },
+      { path: 'counter-use-reducer', element: <CounterUseReducer /> },
       { path: 'quiz-timer', element: <QuizTimer /> },
       { path: 'state-on-prop-change', element: <StateOnPropChange /> },
       { path: 'rhf-submit', element: <RhfSubmit /> },
