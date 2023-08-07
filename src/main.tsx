@@ -14,6 +14,7 @@ import StatusOnLoad from './components/StatusOnLoad'
 import Timer from './components/Timer'
 import ReactIntl from './components/ReactIntl'
 // new component import here
+import SuspenseTransition from './components/SuspenseTransition';
 import ListUseCallback from './components/ListUseCallback';
 import ListUseMemo from './components/ListUseMemo';
 import ElSizeLayoutEffect from './components/ElSizeLayoutEffect';
@@ -68,6 +69,7 @@ const router = createBrowserRouter([
         element: <ReactIntl />,
       },
       // new component route here
+      { path: 'suspense-transition', element: <SuspenseTransition /> },
       { path: 'list-use-callback', element: <ListUseCallback /> },
       { path: 'list-use-memo', element: <ListUseMemo /> },
       { path: 'el-size-layout-effect', element: <ElSizeLayoutEffect /> },

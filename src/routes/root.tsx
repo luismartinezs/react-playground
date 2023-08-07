@@ -25,6 +25,7 @@ const routes = [
   },
 
   // new component link here
+  { path: 'suspense-transition', label: 'SuspenseTransition' },
   { path: 'list-use-callback', label: 'ListUseCallback' },
   { path: 'list-use-memo', label: 'ListUseMemo' },
   { path: 'el-size-layout-effect', label: 'ElSizeLayoutEffect' },
